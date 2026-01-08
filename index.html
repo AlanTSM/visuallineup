@@ -1,0 +1,2524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Creador dinámico de alineaciones</title><style>::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#4a5e88;border-radius:4px}::-webkit-scrollbar-thumb{background:#0c6;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#0a5}body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1e2a44 0,#2d4066 100%);margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;color:#fff}h2{font-size:16px;color:#d9d9d9;margin-bottom:10px;text-transform:uppercase;display:flex;align-items:center;gap:5px}#main-container{display:flex;justify-content:space-between;width:100%;max-width:1200px;gap:20px}#block1,#block2,#block3{flex:1;display:flex;flex-direction:column;align-items:center}#block1-container,#transcription-container{background:rgba(255,255,255,.05);padding:15px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);width:90%;margin-top:20px;transition:height .3s ease;overflow:hidden}#block1-container.collapsed{height:0;padding:0;margin-top:0}#block1-title.collapsed{display:none}#abbreviation-input,#roster-input,#transcription-output{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;position:relative}#abbreviation-input{background:#e6e6e6;color:#333}#roster-input{height:50px;resize:none}#roster-input::placeholder{color:rgba(255,255,255,.4);font-style:italic}#transcription-output{height:350px;font-family:monospace;resize:none}#abbreviation-input{height:20px;margin-bottom:10px;width:60px;display:inline-block}#prefix-dropdown{width:120px;height:30px;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-left:10px;vertical-align:top;position:relative}#prefix-btn{background-color:#2d4066;color:#fff;padding:5px;border:none;cursor:pointer;width:100%}#prefix-content{display:none;position:absolute;background-color:#2d4066;min-width:160px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1}#prefix-content a{color:#fff;padding:12px 16px;text-decoration:none;display:block}#prefix-content a:hover{background-color:#4a5e88}#prefix-dropdown.active #prefix-content{display:block}#aggressiveness-slider{width:100px;margin-left:10px;vertical-align:top;position:relative}#aggressiveness-title{font-size:10px;color:#d9d9d9;text-align:center;margin-bottom:-2px}#button-container{display:flex;gap:10px;margin-top:10px;justify-content:center}.action-button{padding:6px 12px;font-size:12px;background-color:#fc0;color:#1e2a44;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s}.action-button:hover{background-color:#e6b800;transform:scale(1.05)}#field-container{position:relative;width:100%;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3)}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none}#substitutes-container{display:flex;justify-content:center;gap:20px;padding:10px 0}.substitute-slot{width:40px;height:40px;border:2px dashed #4a5e88;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);position:relative;transition:border-color .3s}.substitute-slot:hover{border-color:#fc0}.substitute-slot .number{font-size:14px;font-weight:700;color:#d9d9d9;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute{width:40px;height:40px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;background:linear-gradient(145deg,#66c,#44a);border:1px solid rgba(255,255,255,.2);left:0;top:0}.player-button.on-substitute .name{position:absolute;top:42px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-substitute .number{font-size:14px;font-weight:700;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute .position-fit,.player-button.on-substitute .stats{display:none}#players-container{width:100%;max-height:400px;overflow-y:auto;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}#buttons-container{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}#clear-conditionals-btn,#create-conditionals-btn,#import-conditionals-btn,#select-penalty-btn,#select-substitutes-btn{padding:6px 12px;font-size:12px;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;position:relative}#select-substitutes-btn{background-color:#66c}#select-penalty-btn{background-color:#396}#create-conditionals-btn{background-color:#c63}#clear-conditionals-btn,#import-conditionals-btn{background-color:#66c}#clear-conditionals-btn:hover,#import-conditionals-btn:hover,#select-substitutes-btn:hover{background-color:#55b;transform:scale(1.05)}#select-penalty-btn:hover{background-color:#2d8659;transform:scale(1.05)}#create-conditionals-btn:hover{background-color:#b3592d;transform:scale(1.05)}#select-penalty-btn.active,#select-substitutes-btn.active{background-color:#e63946}#import-conditionals-btn.active{background-color:#e63946}#select-penalty-btn .tooltip,#select-substitutes-btn .tooltip{visibility:hidden;width:120px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-40px;left:50%;margin-left:-60px;font-size:10px;opacity:0;transition:opacity .2s}#select-penalty-btn:hover .tooltip,#select-substitutes-btn:hover .tooltip{visibility:visible;opacity:1}#filter-container{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}#filter-container label{font-size:12px;color:#d9d9d9;display:flex;align-items:center;gap:4px}#filter-container input[name=position]{appearance:none;width:12px;height:12px;background-color:#2d4066;border:1px solid #4a5e88;border-radius:50%}#filter-container input[name=position]:checked{background-color:#fc0}.player-button{padding:8px;background-color:#3b5998;color:#fff;border:none;border-radius:4px;cursor:grab;user-select:none;position:relative;transition:transform .2s,box-shadow .2s;box-shadow:0 2px 5px rgba(0,0,0,.2);font-size:11px;width:85px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2}.player-button.unavailable{background-color:#e63946;cursor:not-allowed;position:relative}.player-button:hover:not(.unavailable){transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,.3)}.player-button.dragging{opacity:.7;transform:scale(1.1);cursor:grabbing}.player-button.dragging.on-field-transform{width:30px;height:30px;border-radius:50%;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.4);transition:all .3s ease}.player-button.dragging.on-field-transform .position-fit,.player-button.dragging.on-field-transform .stats{display:none}.player-button .name{font-size:12px;font-weight:700;margin-bottom:4px}.player-button .position-fit{font-size:10px;opacity:.9;margin-bottom:4px}.player-button .stats{font-size:9px;width:100%}.player-button .stats span{margin:0 2px}.stat-st{color:#f99}.stat-tk{color:#9f9}.stat-ps{color:#99f}.stat-sh{color:#ff9}.player-button.on-field{width:30px;height:30px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;margin-left:5px;transition:all .3s ease;border:1px solid rgba(255,255,255,.2)}.player-button.on-field.section-6{background:linear-gradient(145deg,#ff9,#e6e600)}.player-button.on-field.section-5{background:linear-gradient(145deg,#77d,#55b)}.player-button.on-field.section-4{background:linear-gradient(145deg,#99f,#77d)}.player-button.on-field.section-3{background:linear-gradient(145deg,#bbf,#99d)}.player-button.on-field.section-2{background:linear-gradient(145deg,#9f9,#7d7)}.player-button.on-field.section-1{background:linear-gradient(145deg,#f99,#d77)}.player-button.on-field .name{position:absolute;top:32px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-field .position-fit,.player-button.on-field .stats{display:none}.player-button .star{position:absolute;top:2px;right:2px;font-size:12px;color:#fc0}.player-button.on-field .player-tooltip,.player-button.on-substitute .player-tooltip{visibility:hidden;width:90px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-80px;left:50%;margin-left:-45px;font-size:10px;opacity:0;transition:opacity .2s}.player-button.on-field:hover .player-tooltip,.player-button.on-substitute:hover .player-tooltip{visibility:visible;opacity:1}.remove-btn{background:#e63946;color:#fff;border:none;border-radius:50%;width:10px;height:10px;line-height:10px;font-size:8px;cursor:pointer;position:absolute;top:10px;right:-12px;padding:0}.remove-btn:hover{background:#d00000}#clear-field-btn{position:absolute;top:10px;right:10px;padding:6px 12px;font-size:12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s}#clear-field-btn:hover{background-color:#d00000}#info-icon{width:24px;height:24px;cursor:pointer;margin-right:5px;position:relative}#info-icon img{width:100%;height:100%}#info-icon .tooltip{visibility:hidden;width:200px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-60px;left:50%;margin-left:-100px;font-size:10px;opacity:0;transition:opacity .2s}#info-icon:hover .tooltip{visibility:visible;opacity:1}#formation-display{display:none;position:absolute;bottom:30px;right:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}#average-age-display{display:none;position:absolute;bottom:30px;left:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}.tooltip{visibility:hidden;width:120px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:100%;left:50%;margin-left:-60px;margin-top:2px;font-size:10px;opacity:0}.player-button.unavailable:hover .tooltip{visibility:visible;opacity:1}#aggressiveness-slider:hover .tooltip{visibility:visible;opacity:1;transition:opacity 0s}#aggressiveness-slider:not(:hover) .tooltip{transition:opacity .2s 2s}#toggle-block1-btn{position:absolute;top:10px;right:10px;padding:5px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px}#toggle-block1-btn:hover{background-color:#55b}#transcription-actions{display:flex;justify-content:center;gap:15px;margin-top:10px}.action-icon-container{position:relative;cursor:pointer}.action-icon{width:24px;height:24px;display:block;transition:transform .2s}.action-icon-container.clicked .action-icon{animation:clickAnimation .3s ease}.action-icon-container .tooltip{width:120px;top:-40px;left:50%;margin-left:-60px}.action-icon-container:hover .tooltip{visibility:visible;opacity:1}.tick{position:absolute;top:0;left:0;width:24px;height:24px;background:rgba(0,255,0,.8);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;border-radius:50%;opacity:0;transition:opacity .3s}.tick.show{opacity:1}#progress-container{width:90%;margin:10px 0}#progress-bar{width:100%;height:10px;background:#4a5e88;border-radius:5px;position:relative;overflow:hidden}#progress-fill{height:100%;background:#0c6;width:0;transition:width .3s ease}.checkpoint{position:absolute;top:-2px;width:2px;height:14px;background:#fff;opacity:.7}@keyframes clickAnimation{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;max-height:80vh;overflow-y:auto;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #4a5e88;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,.05);transition:background .2s}#conditionals-popup .tab.active{background:rgba(255,255,255,.15)}#conditionals-popup .tab:hover{background:rgba(255,255,255,.1)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:5px}#conditionals-popup label{font-size:12px;color:#d9d9d9}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}#current-conditionals{margin-top:15px}#current-conditionals h4{cursor:pointer;display:flex;align-items:center;gap:5px}#conditionals-list{display:none;list-style:none;padding:0;margin:10px 0;max-height:200px;overflow-y:auto}#conditionals-list li{background:rgba(255,255,255,.05);padding:5px;margin-bottom:5px;border-radius:4px}.close-btn{position:absolute;top:10px;right:10px;width:20px;height:20px;background-color:#e63946;color:#fff;border:none;border-radius:50%;font-size:14px;line-height:20px;cursor:pointer;transition:background-color .2s}.close-btn:hover{background-color:#d00000}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-button.on-field.swapping{transform:scale(1.1);transition:all .3s ease}#tab-container{position:fixed;bottom:0;right:0;width:200px;background:rgba(255,255,255,.05);border-top-left-radius:8px;box-shadow:0 -2px 10px rgba(0,0,0,.3);z-index:1000;transition:height .3s ease;height:30px;overflow:hidden}#tab-toggle{background:#66c;color:#fff;text-align:center;padding:5px;cursor:pointer;border-top-left-radius:8px;font-size:14px}#tab-content{padding:10px;display:flex;flex-direction:column;gap:10px}#tab-content a{color:#fc0;text-decoration:none;font-size:12px;transition:color .2s}#tab-content a:hover{color:#e6b800}#tab-container.expanded{height:200px}.flag{width:16px;height:12px;margin-right:4px;vertical-align:middle}#dropbox-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#dropbox-popup h2{text-align:center}#dropbox-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:10px}#loading-dropbox{display:none;text-align:center;margin-top:10px;font-size:14px}#dropbox-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-group-option{font-weight:700;color:#d9d9d9;text-align:center}#delete-conditional-btn{margin-top:10px;padding:6px 12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer}#delete-conditional-btn:hover{background-color:#d00000}#team-badge-container{display:flex;align-items:center;margin-bottom:10px;gap:10px}#team-badge{width:48px;height:48px;object-fit:contain}#transcription-controls{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}.glow-yellow{box-shadow:0 0 10px 3px rgba(255,204,0,.7);transition:box-shadow .3s ease}.glow-red{box-shadow:0 0 10px 3px rgba(255,0,0,.7);transition:box-shadow .3s ease}#view-roster-link{margin-top:10px;padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;text-decoration:none}#view-roster-link:hover{background-color:#55b;transform:scale(1.05)}#roster-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;max-width:800px;max-height:80vh;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;overflow:auto}#roster-popup table{width:100%;border-collapse:collapse;font-size:12px}#roster-popup td,#roster-popup th{padding:8px;border:1px solid #4a5e88;text-align:left}#roster-popup th{background:#2d4066;position:sticky;top:0;z-index:2}#roster-popup td:first-child{background:#2d4066;position:sticky;left:0;z-index:1}#roster-popup th:first-child{z-index:3}#roster-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}@media (max-width:768px){#main-container{flex-direction:column}#block1,#block2,#block3{width:100%}#players-container{grid-template-columns:1fr 1fr}#filter-container{flex-direction:column;align-items:flex-start}#button-container,#buttons-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:60%;margin-right:10px}#players-container-wrapper{width:40%;display:flex;flex-direction:column}#players-container{max-height:300px}}@media (max-aspect-ratio:1/1) and (max-width:768px){#main-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:50%;margin-right:10px}#players-container-wrapper{width:50%;display:flex;flex-direction:column}#players-container{max-height:250px;grid-template-columns:1fr 1fr}}</style>
+<div id="main-container">
+	    
+	<div id="block1">
+		        
+		<h2 id="block1-title">
+			Tu Plantilla
+		</h2>
+		        
+		<div id="block1-container">
+			            <textarea placeholder="Pega o carga tu plantilla aquí (incluyendo la primera línea)..." id="roster-input"></textarea>            
+			<div id="button-container">
+				                
+				<button title="Cargar desde Dropbox" id="dropbox-button" class="action-button">
+					Dropbox
+				</button>
+				                
+				<button title="Carga un archivo .txt con tu plantilla" id="load-button" class="action-button">
+					Cargar
+				</button>
+				                
+				<button title="Pega el contenido de tu portapapeles" id="paste-button" class="action-button">
+					Pegar
+				</button>
+				                
+				<button title="Refresca la página" id="clear-refresca" class="action-button">
+					Limpiar
+				</button>
+				            
+			</div>
+			            <input style="display: none;" accept=".txt" id="file-input" type="file" />            
+			<button id="toggle-block1-btn">
+				▲
+			</button>
+			        
+		</div>
+		        
+		<h2>
+			Transcripción
+		</h2>
+		        
+		<div id="progress-container">
+			            
+			<div id="progress-bar">
+				                
+				<div id="progress-fill">
+				</div>
+				                
+				<div class="checkpoint" style="left: 25%">
+				</div>
+				                
+				<div class="checkpoint" style="left: 50%">
+				</div>
+				                
+				<div class="checkpoint" style="left: 75%">
+				</div>
+				            
+			</div>
+			        
+		</div>
+		        
+		<div id="transcription-container">
+			            
+			<div id="transcription-controls">
+				                
+				<div id="team-badge-container">
+					                    <img id="team-badge" src="" alt="Escudo del equipo" style="display: none;" />                    <input type="text" id="abbreviation-input" maxlength="3" placeholder="Abrev." />                
+				</div>
+				                
+				<div id="prefix-dropdown">
+					                    
+					<button id="prefix-btn" class="dropbtn">
+						Táctica
+					</button>
+					                    
+					<div id="prefix-content" class="dropdown-content">
+						                        <a data-value="A">A (Atacante)</a>                        <a data-value="C">C (Contragolpe)</a>                        <a data-value="D">D (Defensiva)</a>                        <a data-value="E">E (Europea)</a>                        <a data-value="L">L (Balones largos)</a>                        <a data-value="N">N (Equilibrada)</a>                        <a data-value="P">P (Pases cortos)</a>                        <a data-value="T">T (Temeraria)</a>                    
+					</div>
+					                
+				</div>
+				                
+				<div style="position: relative;">
+					                    
+					<div id="aggressiveness-title">
+						Agresividad
+					</div>
+					                    <input type="range" id="aggressiveness-slider" min="0" max="20" value="10" />                    <span class="tooltip">Ajusta la agresividad del equipo (0 = muy pasivo, 20 = muy agresivo)</span>                
+				</div>
+				            
+			</div>
+			            <textarea id="transcription-output" readonly=""></textarea>            
+			<div id="transcription-actions">
+				                
+				<div class="action-icon-container" id="copy-btn">
+					                    <img src="https://2img.net/i.imgur.com/dFM5cLr.png" class="action-icon" alt="Copiar" />                    <span class="tooltip">Copiar transcripción al portapapeles</span>                    <span class="tick">✔</span>                
+				</div>
+				                
+				<div class="action-icon-container" id="download-btn">
+					                    <img src="https://2img.net/i.imgur.com/PsdweS7.png" class="action-icon" alt="Descargar" />                    <span class="tooltip">Descargar transcripción como .txt</span>                    <span class="tick">✔</span>                
+				</div>
+				            
+			</div>
+			        
+		</div>
+		    
+	</div>
+	         
+	<div id="block2">
+		        
+		<h2>
+			Alineación
+		</h2>
+		        
+		<div id="field-container">
+			            <img data-section="6" alt="Field Section 6" class="field-section" src="https://2img.net/i.imgur.com/lFtvphv.png" />            <img data-section="5" alt="Field Section 5" class="field-section" src="https://2img.net/i.imgur.com/SxJKpyn.jpeg" />            <img data-section="4" alt="Field Section 4" class="field-section" src="https://2img.net/i.imgur.com/XtiRV56.jpeg" />            <img data-section="3" alt="Field Section 3" class="field-section" src="https://2img.net/i.imgur.com/fM6CtVG.jpeg" />            <img data-section="2" alt="Field Section 2" class="field-section" src="https://2img.net/i.imgur.com/jtQNsGs.jpeg" />            <img data-section="1" alt="Field Section 1" class="field-section" src="https://2img.net/i.imgur.com/Bd2gNtr.jpeg" />            
+			<div id="substitutes-container">
+				                
+				<div data-number="12" class="substitute-slot">
+					<span class="number">12</span>
+				</div>
+				                
+				<div data-number="13" class="substitute-slot">
+					<span class="number">13</span>
+				</div>
+				                
+				<div data-number="14" class="substitute-slot">
+					<span class="number">14</span>
+				</div>
+				                
+				<div data-number="15" class="substitute-slot">
+					<span class="number">15</span>
+				</div>
+				                
+				<div data-number="16" class="substitute-slot">
+					<span class="number">16</span>
+				</div>
+				            
+			</div>
+			            
+			<button id="clear-field-btn">
+				Borrar
+			</button>
+			            
+			<div id="formation-display">
+			</div>
+			            
+			<div id="average-age-display">
+			</div>
+			        
+		</div>
+		    
+	</div>
+	         
+	<div id="block3">
+		        
+		<h2>
+			Jugadores
+		</h2>
+		        
+		<div id="filter-container">
+			            
+			<div id="info-icon">
+				                <img src="https://2img.net/i.imgur.com/VEs7xQI.png" alt="Info" />                <span class="tooltip">Para empezar a confeccionar tu alineación, arrastra los jugadores desde "Jugadores" al terreno de juego. Usa "Seleccionar suplentes" para elegir los suplentes en orden (12-16) pinchando en sus botones.</span>            
+			</div>
+			            <label><input value="all" id="all-players" type="checkbox" /> Todos</label>            <label><input value="GK" name="position" type="checkbox" /> GK</label>            <label><input value="DF" name="position" type="checkbox" /> DF</label>            <label><input value="MF" name="position" type="checkbox" /> MF</label>            <label><input value="FW" name="position" type="checkbox" /> FW</label>            <label><input value="high-fit" id="fit-filter" type="checkbox" /> Fit ≥ 90</label>        
+		</div>
+		        
+		<div id="players-container">
+		</div>
+		        
+		<div id="buttons-container">
+			            
+			<button id="select-substitutes-btn">
+				                Seleccionar suplentes                 <span class="tooltip">Haz clic aquí y luego en los jugadores para asignarlos como suplentes (12-16).</span>            
+			</button>
+			            
+			<button id="select-penalty-btn">
+				                Lanzador de penaltis                 <span class="tooltip">Haz clic aquí y luego en un titular para asignarlo como lanzador de penaltis.</span>            
+			</button>
+			            
+			<button id="create-conditionals-btn">
+				Crear condicionales
+			</button>
+			            
+			<button id="import-conditionals-btn">
+				Importar condicionales
+			</button>
+			            
+			<button id="clear-conditionals-btn">
+				Borrar condicionales
+			</button>
+			            <input style="display: none;" accept=".txt" id="conditionals-input" type="file" />        
+		</div>
+		        <a id="view-roster-link" href="#">Ver plantilla</a>    
+	</div>
+</div>
+<div id="conditionals-overlay">
+</div>
+<div id="conditionals-popup">
+	    
+	<button id="close-conditionals-btn" class="close-btn">
+		×
+	</button>
+	    
+	<div class="tabs">
+		        
+		<div class="tab active" data-tab="tactic" style="display: flex; align-items: center; gap: 5px;">
+			            <img src="https://2img.net/i.imgur.com/baQRXgQ.png" alt="Táctica" style="width: 20px; height: 20px;" /> Táctica        
+		</div>
+		        
+		<div class="tab" data-tab="substitution" style="display: flex; align-items: center; gap: 5px;">
+			            <img src="https://2img.net/i.imgur.com/7MQ5CbC.png" alt="Sustituciones" style="width: 20px; height: 20px;" /> Sustituciones        
+		</div>
+		        
+		<div class="tab" data-tab="reposition" style="display: flex; align-items: center; gap: 5px;">
+			            <img src="https://2img.net/i.imgur.com/ZUv4QKl.png" alt="Reposicionar" style="width: 20px; height: 20px;" /> Reposicionar        
+		</div>
+		        
+		<div class="tab" data-tab="aggression" style="display: flex; align-items: center; gap: 5px;">
+			            <img src="https://2img.net/i.imgur.com/kFrxdCR.png" alt="Agresividad" style="width: 20px; height: 20px;" /> Agresividad        
+		</div>
+		    
+	</div>
+	    
+	<div id="tactic-tab" class="tab-content active">
+		        
+		<div class="grid">
+			            
+			<div>
+				<label>Nueva táctica</label><select id="tactic-new"></select>
+			</div>
+			            
+			<div>
+				<label>Si en el minuto</label><select id="tactic-if-min"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(1-30)</label><select id="tactic-min-value1"></select>
+			</div>
+			            
+			<div>
+				<label>(31-60)</label><select id="tactic-min-value2"></select>
+			</div>
+			            
+			<div>
+				<label>(61-120)</label><select id="tactic-min-value3"></select>
+			</div>
+			            
+			<div>
+				<label>Si el resultado</label><select id="tactic-if-score"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar resultado)</label><select id="tactic-score-value"><option value="">Seleccionar</option><option value="+3">+3</option><option value="+2">+2</option><option value="+1">+1</option><option value="0">0</option><option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option></select>
+			</div>
+			            
+			<div>
+				<label>Si el número de disparos</label><select id="tactic-if-shots"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar núm. disparos)</label><select id="tactic-shots-value"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta amarilla</label><select id="tactic-if-yellow"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta roja</label><select id="tactic-if-red"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de lesión</label><select id="tactic-if-injured"></select>
+			</div>
+			        
+		</div>
+		        
+		<div class="buttons">
+			            
+			<button id="tactic-add" class="action-button">
+				Añadir
+			</button>
+			            
+			<button id="tactic-clear" class="action-button">
+				Resetear
+			</button>
+			        
+		</div>
+		    
+	</div>
+	    
+	<div id="substitution-tab" class="tab-content">
+		        
+		<div class="grid">
+			            
+			<div>
+				<label>Se retira</label><select id="sub-off"></select>
+			</div>
+			            
+			<div>
+				<label>Entra</label><select id="sub-on"></select>
+			</div>
+			            
+			<div>
+				<label>Posición</label><select id="sub-position"><option value="">Seleccionar</option><option value="GK">GK</option><option value="DF">DF</option><option value="DM">DM</option><option value="MF">MF</option><option value="AM">AM</option><option value="FW">FW</option></select>
+			</div>
+			            
+			<div>
+				<label>Si en el minuto</label><select id="sub-if-min"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(1-30)</label><select id="sub-min-value1"></select>
+			</div>
+			            
+			<div>
+				<label>(31-60)</label><select id="sub-min-value2"></select>
+			</div>
+			            
+			<div>
+				<label>(61-120)</label><select id="sub-min-value3"></select>
+			</div>
+			            
+			<div>
+				<label>Si el resultado</label><select id="sub-if-score"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar resultado)</label><select id="sub-score-value"><option value="">Seleccionar</option><option value="+3">+3</option><option value="+2">+2</option><option value="+1">+1</option><option value="0">0</option><option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option></select>
+			</div>
+			            
+			<div>
+				<label>Si el número de disparos</label><select id="sub-if-shots"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar núm. disparos)</label><select id="sub-shots-value"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta amarilla</label><select id="sub-if-yellow"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta roja</label><select id="sub-if-red"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de lesión</label><select id="sub-if-injured"></select>
+			</div>
+			        
+		</div>
+		        
+		<div class="buttons">
+			            
+			<button id="sub-add" class="action-button">
+				Añadir
+			</button>
+			            
+			<button id="sub-clear" class="action-button">
+				Resetear
+			</button>
+			        
+		</div>
+		    
+	</div>
+	    
+	<div id="reposition-tab" class="tab-content">
+		        
+		<div class="grid">
+			            
+			<div>
+				<label>Jugador</label><select id="reposition-player"></select>
+			</div>
+			            
+			<div>
+				<label>Posición</label><select id="reposition-position"><option value="">Seleccionar</option><option value="GK">GK</option><option value="DF">DF</option><option value="DM">DM</option><option value="MF">MF</option><option value="AM">AM</option><option value="FW">FW</option></select>
+			</div>
+			            
+			<div>
+				<label>Si en el minuto</label><select id="reposition-if-min"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(1-30)</label><select id="reposition-min-value1"></select>
+			</div>
+			            
+			<div>
+				<label>(31-60)</label><select id="reposition-min-value2"></select>
+			</div>
+			            
+			<div>
+				<label>(61-120)</label><select id="reposition-min-value3"></select>
+			</div>
+			            
+			<div>
+				<label>Si el resultado</label><select id="reposition-if-score"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar resultado)</label><select id="reposition-score-value"><option value="">Seleccionar</option><option value="+3">+3</option><option value="+2">+2</option><option value="+1">+1</option><option value="0">0</option><option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option></select>
+			</div>
+			            
+			<div>
+				<label>Si el número de disparos</label><select id="reposition-if-shots"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar núm. disparos)</label><select id="reposition-shots-value"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta amarilla</label><select id="reposition-if-yellow"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta roja</label><select id="reposition-if-red"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de lesión</label><select id="reposition-if-injured"></select>
+			</div>
+			        
+		</div>
+		        
+		<div class="buttons">
+			            
+			<button id="reposition-add" class="action-button">
+				Añadir
+			</button>
+			            
+			<button id="reposition-clear" class="action-button">
+				Resetear
+			</button>
+			        
+		</div>
+		    
+	</div>
+	    
+	<div id="aggression-tab" class="tab-content">
+		        
+		<div class="grid">
+			            
+			<div>
+				<label>Nueva agresividad</label><select id="aggression-new"></select>
+			</div>
+			            
+			<div>
+				<label>Si en el minuto</label><select id="aggression-if-min"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(1-30)</label><select id="aggression-min-value1"></select>
+			</div>
+			            
+			<div>
+				<label>(31-60)</label><select id="aggression-min-value2"></select>
+			</div>
+			            
+			<div>
+				<label>(61-120)</label><select id="aggression-min-value3"></select>
+			</div>
+			            
+			<div>
+				<label>Si el resultado</label><select id="aggression-if-score"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar resultado)</label><select id="aggression-score-value"><option value="">Seleccionar</option><option value="+3">+3</option><option value="+2">+2</option><option value="+1">+1</option><option value="0">0</option><option value="-1">-1</option><option value="-2">-2</option><option value="-3">-3</option></select>
+			</div>
+			            
+			<div>
+				<label>Si el número de disparos</label><select id="aggression-if-shots"><option value="">Seleccionar</option><option value="=">=</option><option value="<="><=</option><option value=">=">>=</option></select>
+			</div>
+			            
+			<div>
+				<label>(especificar núm. disparos)</label><select id="aggression-shots-value"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta amarilla</label><select id="aggression-if-yellow"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de tarjeta roja</label><select id="aggression-if-red"></select>
+			</div>
+			            
+			<div>
+				<label>En caso de lesión</label><select id="aggression-if-injured"></select>
+			</div>
+			        
+		</div>
+		        
+		<div class="buttons">
+			            
+			<button id="aggression-add" class="action-button">
+				Añadir
+			</button>
+			            
+			<button id="aggression-clear" class="action-button">
+				Resetear
+			</button>
+			        
+		</div>
+		    
+	</div>
+	    
+	<div id="current-conditionals">
+		        
+		<h4 onclick="toggleConditionalsList()">
+			<em class="fas fa-chevron-down">
+			</em> Condicionales actuales:
+		</h4>
+		        
+		<ul id="conditionals-list">
+		</ul>
+		        <select id="conditionalToDelete"></select>        
+		<button id="delete-conditional-btn" onclick="deleteConditional()">
+			Eliminar
+		</button>
+		    
+	</div>
+</div>
+<div id="tab-container">
+	    
+	<div id="tab-toggle">
+		Más herramientas
+	</div>
+	    
+	<div id="tab-content">
+		        <a target="_blank" href="https://alantsm.github.io/expresslineupbuilder/">Alineaciones exprés</a>        <a target="_blank" href="https://alantsm.github.io/datacentre/">Central de datos</a>        <a target="_blank" href="https://www.tusoccermanager.com/h43-lineupgenerator-html">Generador de alineaciones</a>        <a target="_blank" href="https://www.tusoccermanager.com/h35-lineupvalidator-html">Revisa tu alineación</a>    
+	</div>
+</div>
+<div id="dropbox-overlay">
+</div>
+<div id="dropbox-popup">
+	    
+	<h2>
+		Cargar desde Dropbox
+	</h2>
+	    <select id="team-select">
+        <option value="">Seleccionar equipo</option>
+        <option value="https://www.dropbox.com/scl/fi/9njb84ywzym3hhx5i2lg5/ajx.txt?rlkey=jhym2pqc9m60sioha0mmcil0o&e=1&dl=1">Ajax</option>
+        <option value="https://www.dropbox.com/scl/fi/wb6juf6y612xx28zrvu26/ars.txt?rlkey=6qe12dx31wj93kphgz5dh6qlz&e=1&dl=1">Arsenal</option>
+        <option value="https://www.dropbox.com/scl/fi/ucubvl04pfvqkev518dyo/asv.txt?rlkey=ubr83xqdq2v5r2g9twadabnib&e=1&st=com1va32&dl=1">Aston Villa</option>
+        <option value="https://www.dropbox.com/scl/fi/9w70qz8otcgwf57h25y07/ata.txt?rlkey=ussk413mrxz8iwe4d9tg7ls9i&e=1&st=u4t1vyqv&dl=1">Atalanta</option>
+        <option value="https://www.dropbox.com/scl/fi/tuhsywhyfywslnig6j5ar/atm.txt?rlkey=wg64adwz2y5eurb20m20201kr&e=1&dl=1">Atlético de Madrid</option>
+        <option value="https://www.dropbox.com/scl/fi/b2a0fyv07x3esuxpr1280/fcb.txt?rlkey=gjc2quuw368lwzf091a4tf89t&e=1&dl=1">Barcelona</option>
+        <option value="https://www.dropbox.com/scl/fi/egj2qgnrkjtt7jlxuhrx0/ble.txt?rlkey=9qodoqwtvzaklfh2t96rykp9i&e=1&st=2jg7bb7k&dl=1">Bayer Leverkusen</option>
+        <option value="https://www.dropbox.com/scl/fi/bq95u9q42jdhd156bw2dk/bay.txt?rlkey=9h8b1beoe8dimr9ryk1rd1mva&e=1&dl=1">Bayern de Múnich</option>
+        <option value="https://www.dropbox.com/scl/fi/6olskieubqse5hr31t6sz/bdo.txt?rlkey=wdgovvbf2npezjgjjul1101kt&e=1&dl=1">Borussia Dortmund</option>
+        <option value="https://www.dropbox.com/scl/fi/vaib05ni6t82hyrt5rg9v/che.txt?rlkey=fiv3v4p18gh9vc0ztma3v8pnv&e=1&dl=1">Chelsea</option>
+        <option value="https://www.dropbox.com/scl/fi/6hxb2kmntadzmqcm14zg9/int.txt?rlkey=y0gisxpu2fnixut8h3haxcydc&e=1&dl=1">Inter de Milán</option>
+        <option value="https://www.dropbox.com/scl/fi/x9ysiu5eyrpkdaf1pfjpe/juv.txt?rlkey=jxocqh225uco9o2lx54mvtz61&e=1&dl=1">Juventus</option>
+        <option value="https://www.dropbox.com/scl/fi/hz76l1lkyqvuuns4hrreo/liv.txt?rlkey=3afux4q929md83z041di2coxe&e=1&dl=1">Liverpool</option>
+        <option value="https://www.dropbox.com/scl/fi/wcq9i1o9bxppwbyu3ggv4/mci.txt?rlkey=kwxrxndbhcxisdf5339ldef1k&e=1&dl=1">Manchester City</option>
+        <option value="https://www.dropbox.com/scl/fi/2j17u24ig5s5hzbvg0zkp/man.txt?rlkey=9cs3sj1debd0cbw3mxkizrzfz&e=1&dl=1">Manchester United</option>
+        <option value="https://www.dropbox.com/scl/fi/klb7hcy0epivuvkmio8o2/mil.txt?rlkey=7plny75gkdl22tkkg8wkvmo1s&e=1&dl=1">Milan</option>
+        <option value="https://www.dropbox.com/scl/fi/zpou5oz6iv51u21helwdg/nap.txt?rlkey=gjekp32w79pxwtegk1s3oei06&e=1&dl=1">Nápoles</option>
+        <option value="https://www.dropbox.com/scl/fi/46m0eyfru9g97ch8c4ryy/new.txt?rlkey=zbbt3pe37i2bocxh946sz1axf&e=1&st=bk9c4sji&dl=1">Newcastle United</option>
+        <option value="https://www.dropbox.com/scl/fi/k2f61aq73xmm9eknqc0pm/psg.txt?rlkey=syd3nsi8zj826ysxx70ldtbur&e=1&dl=1">PSG</option>
+        <option value="https://www.dropbox.com/scl/fi/8ick97tco5apa2rgg01uv/rbl.txt?rlkey=kn17krqcqhyefeydngn2c3yqj&e=1&dl=1">RB Leipzig</option>
+        <option value="https://www.dropbox.com/scl/fi/2xida739oitrf4gilso4v/rma.txt?rlkey=ybjbuajy747quooqkzt5rsai3&e=1&dl=1">Real Madrid</option>
+        <option value="https://www.dropbox.com/scl/fi/n64w9h04e2f8h0tflt1kg/sev.txt?rlkey=z72w5eyq9vacdgr8655yzmthq&e=1&dl=1">Sevilla</option>
+        <option value="https://www.dropbox.com/scl/fi/ldj3rdbrip4466xdvu54e/tot.txt?rlkey=fpj5emqz2bwxue6si2p5slkci&e=1&dl=1">Tottenham Hotspur</option>
+        <option value="https://www.dropbox.com/scl/fi/bo2rw6u9sndoel5hzfcmn/vil.txt?rlkey=kz37s2mwg71cgls3903skid2p&e=1&dl=1">Villarreal</option>
+    </select>    
+	<div id="loading-dropbox">
+		⏳ Cargando plantilla desde Dropbox...
+	</div>
+</div>
+<div id="roster-overlay">
+</div>
+<div id="roster-popup">
+	    
+	<button id="close-roster-btn" class="close-btn">
+		×
+	</button>
+	    
+	<h2>
+		Plantilla
+	</h2>
+	    
+	<div id="roster-table-container">
+	</div>
+</div>
+ <script>
+    const rosterInput = document.getElementById('roster-input');
+    const loadButton = document.getElementById('load-button');
+    const pasteButton = document.getElementById('paste-button');
+    const clearButton = document.getElementById('clear-refresca');
+    const fileInput = document.getElementById('file-input');
+    const fieldContainer = document.getElementById('field-container');
+    const playersContainer = document.getElementById('players-container');
+    const substitutesContainer = document.getElementById('substitutes-container');
+    const positionCheckboxes = document.querySelectorAll('input[name="position"]');
+    const fitCheckbox = document.getElementById('fit-filter');
+    const allPlayersCheckbox = document.getElementById('all-players');
+    const clearFieldBtn = document.getElementById('clear-field-btn');
+    const selectSubstitutesBtn = document.getElementById('select-substitutes-btn');
+    const selectPenaltyBtn = document.getElementById('select-penalty-btn');
+    const importConditionalsBtn = document.getElementById('import-conditionals-btn');
+    const createConditionalsBtn = document.getElementById('create-conditionals-btn');
+    const clearConditionalsBtn = document.getElementById('clear-conditionals-btn');
+    const conditionalsInput = document.getElementById('conditionals-input');
+    const transcriptionOutput = document.getElementById('transcription-output');
+    const abbreviationInput = document.getElementById('abbreviation-input');
+    const prefixBtn = document.getElementById('prefix-btn');
+    const aggressivenessSlider = document.getElementById('aggressiveness-slider');
+    const block1Container = document.getElementById('block1-container');
+    const block1Title = document.getElementById('block1-title');
+    const toggleBlock1Btn = document.getElementById('toggle-block1-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const downloadBtn = document.getElementById('download-btn');
+    const progressFill = document.getElementById('progress-fill');
+    const formationDisplay = document.getElementById('formation-display');
+    const averageAgeDisplay = document.getElementById('average-age-display');
+    const conditionalsPopup = document.getElementById('conditionals-popup');
+    const conditionalsOverlay = document.getElementById('conditionals-overlay');
+    const closeConditionalsBtn = document.getElementById('close-conditionals-btn');
+    const dropboxButton = document.getElementById('dropbox-button');
+    const dropboxPopup = document.getElementById('dropbox-popup');
+    const dropboxOverlay = document.getElementById('dropbox-overlay');
+    const teamSelect = document.getElementById('team-select');
+    const loadingDropbox = document.getElementById('loading-dropbox');
+    const teamBadge = document.getElementById('team-badge');
+    const viewRosterLink = document.getElementById('view-roster-link');
+    const rosterPopup = document.getElementById('roster-popup');
+    const rosterOverlay = document.getElementById('roster-overlay');
+    const closeRosterBtn = document.getElementById('close-roster-btn');
+    const rosterTableContainer = document.getElementById('roster-table-container');
+
+    let nationalityFlags = {};
+    let teamAbbrMap = {};
+    let teamBadges = {};
+    let rosterData = [];
+    let isSelectingSubstitutes = false;
+    let isSelectingPenalty = false;
+    let currentSubstituteIndex = 0;
+    let penaltyKicker = null;
+    let conditionalsContent = '';
+    let customConditionals = [];
+    let hoverSound = new Audio('https://www.tusoccermanager.com/download?id=1498');
+
+    // Función para validar la alineación completa
+    function validarAlineacionCompleta() {
+        const errores = [];
+        
+        // Validar abreviatura
+        if (abbreviationInput.value.length !== 3) {
+            errores.push('La abreviatura del equipo debe contener exactamente 3 letras');
+        }
+        
+        // Validar táctica
+        if (!prefixBtn.dataset.value) {
+            errores.push('No se ha especificado la táctica');
+        }
+        
+        // Validar número de jugadores
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute').length;
+        
+        if (playersOnField !== 11) {
+            errores.push(`Debe haber 11 jugadores titulares (actualmente hay ${playersOnField})`);
+        }
+        
+        if (substitutes !== 5) {
+            errores.push(`Debe haber 5 suplentes (actualmente hay ${substitutes})`);
+        }
+        
+        // Validar que el primer titular sea portero
+        if (playersOnField > 0) {
+            const firstPlayer = fieldContainer.querySelector('.player-button.on-field.section-1');
+            if (!firstPlayer) {
+                errores.push('El primer jugador debe ser un portero (GK)');
+            }
+        }
+        
+        // Validar que el primer suplente sea portero
+        if (substitutes > 0) {
+            const firstSubstitute = substitutesContainer.querySelector('.substitute-slot[data-number="12"] .player-button');
+            if (firstSubstitute) {
+                const playerData = rosterData.find(p => formatDisplayName(p.name) === firstSubstitute.querySelector('.name').textContent);
+                if (playerData && playerData.position !== 'GK') {
+                    errores.push('El primer suplente (número 12) debe ser un portero (GK)');
+                }
+            }
+        }
+        
+        // Validar lanzador de penaltis
+        if (!penaltyKicker) {
+            errores.push('Debe haber un lanzador de penaltis especificado');
+        }
+        
+        // Validar condicionales
+        customConditionals.forEach((conditional, index) => {
+            if (!validateConditional(conditional)) {
+                errores.push(`Condicional ${index + 1} no es válido: ${conditional}`);
+            }
+        });
+        
+        return errores;
+    }
+
+    async function loadFlags() {
+        try {
+            const response = await fetch('https://www.tusoccermanager.com/h86-flagdb-html');
+            const text = await response.text();
+            const preMatch = text.match(/<pre>(.*?)<\/pre>/s);
+            if (preMatch) {
+                const lines = preMatch[1].split('\n');
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line) {
+                        const [code, url] = line.split(':').map(part => part.trim());
+                        nationalityFlags[code.toLowerCase()] = url;
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error loading flags:', error);
+        }
+    }
+
+    async function loadTeamAbbrs() {
+        try {
+            const response = await fetch('https://corsproxy.io/?' + encodeURIComponent('https://www.tusoccermanager.com/h95-teamabbreviationdb-html'));
+            const text = await response.text();
+            const preMatch = text.match(/<pre>(.*?)<\/pre>/s);
+            if (preMatch) {
+                const lines = preMatch[1].split('\n');
+                lines.forEach(line => {
+                    line = line.trim();
+                    if (line) {
+                        const match = line.match(/^(.+):\s*(\w+)$/);
+                        if (match) {
+                            teamAbbrMap[match[1].trim()] = match[2].trim();
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error loading team abbreviations:', error);
+        }
+    }
+
+    async function loadTeamBadges() {
+        try {
+            const response = await fetch('https://www.tusoccermanager.com/h63-teambadgedb-html');
+            const text = await response.text();
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            const listItems = doc.querySelectorAll('#shields-list li');
+            listItems.forEach(li => {
+                const text = li.textContent.trim();
+                const [team, url] = text.split(': ').map(part => part.trim());
+                teamBadges[team] = url;
+            });
+        } catch (error) {
+            console.error('Error loading team badges:', error);
+        }
+    }
+
+    (async () => {
+        await loadFlags();
+        await loadTeamAbbrs();
+        await loadTeamBadges();
+    })();
+
+    closeConditionalsBtn.addEventListener('click', closeConditionalsPopup);
+
+    clearConditionalsBtn.addEventListener('click', () => {
+        conditionalsContent = '';
+        customConditionals = [];
+        importConditionalsBtn.textContent = 'Importar condicionales';
+        importConditionalsBtn.classList.remove('active');
+        updateTranscription();
+    });
+
+    rosterInput.addEventListener('input', () => {
+        processRoster();
+        collapseBlock1();
+    });
+
+    loadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                rosterInput.value = event.target.result;
+                processRoster();
+                collapseBlock1();
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    pasteButton.addEventListener('click', async () => {
+        try {
+            const text = await navigator.clipboard.readText();
+            rosterInput.value = text;
+            processRoster();
+            collapseBlock1();
+        } catch (err) {
+            console.error('Error al pegar desde el portapapeles:', err);
+        }
+    });
+
+    clearButton.addEventListener('click', () => {
+        location.reload();
+    });
+
+    positionCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            positionCheckboxes.forEach(cb => {
+                if (cb !== checkbox) cb.checked = false;
+            });
+            allPlayersCheckbox.checked = false;
+            filterPlayers();
+        });
+    });
+
+    fitCheckbox.addEventListener('change', filterPlayers);
+
+    allPlayersCheckbox.addEventListener('change', () => {
+        if (allPlayersCheckbox.checked) {
+            positionCheckboxes.forEach(cb => cb.checked = false);
+        }
+        filterPlayers();
+    });
+
+    selectSubstitutesBtn.addEventListener('click', () => {
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        if (!isSelectingSubstitutes && playersOnField !== 11) {
+            alert('Debes seleccionar 11 titulares primero.');
+            return;
+        }
+        isSelectingSubstitutes = !isSelectingSubstitutes;
+        isSelectingPenalty = false;
+        selectSubstitutesBtn.classList.toggle('active');
+        selectPenaltyBtn.classList.remove('active');
+        selectSubstitutesBtn.textContent = isSelectingSubstitutes ? 'Volver' : 'Seleccionar suplentes';
+        currentSubstituteIndex = Array.from(substitutesContainer.querySelectorAll('.player-button')).length;
+        filterPlayers();
+        updateTranscription();
+        updateProgress();
+        updateButtonGlows();
+    });
+
+    selectPenaltyBtn.addEventListener('click', () => {
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        const substitutes = substitutesContainer.querySelectorAll('.player-button').length;
+        if (!isSelectingPenalty && (playersOnField !== 11 || substitutes !== 5)) {
+            alert('Debes seleccionar 11 titulares y 5 suplentes primero.');
+            return;
+        }
+        isSelectingPenalty = !isSelectingPenalty;
+        isSelectingSubstitutes = false;
+        selectPenaltyBtn.classList.toggle('active');
+        selectSubstitutesBtn.classList.remove('active');
+        selectPenaltyBtn.textContent = isSelectingPenalty ? 'Volver' : 'Lanzador de penaltis';
+        filterPlayers();
+        updateTranscription();
+        updateProgress();
+        updateButtonGlows();
+    });
+
+    importConditionalsBtn.addEventListener('click', () => {
+        conditionalsInput.click();
+    });
+
+    conditionalsInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const importedConditionals = event.target.result.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line !== '');
+                
+                const invalidLines = [];
+                const validConditionals = [];
+                importedConditionals.forEach((conditional, index) => {
+                    if (validateConditional(conditional)) {
+                        validConditionals.push(conditional.toUpperCase());
+                    } else {
+                        invalidLines.push(`Línea ${index + 1}: ${conditional}`);
+                    }
+                });
+                
+                if (invalidLines.length > 0) {
+                    alert(`Error en las siguientes líneas:\n${invalidLines.join('\n')}\nLos condicionales no válidos no se importarán.`);
+                }
+                
+                customConditionals.push(...validConditionals);
+                updateTranscription();
+                updateCurrentConditionals();
+                updateConditionalsDeleteSelect();
+                conditionalsInput.value = '';
+            };
+            reader.readAsText(file);
+        }
+    });
+
+    abbreviationInput.addEventListener('input', () => {
+        abbreviationInput.value = abbreviationInput.value.slice(0, 3).toUpperCase();
+        updateTranscription();
+        updateProgress();
+    });
+
+    const prefixContent = document.getElementById('prefix-content');
+    const prefixOptions = prefixContent.querySelectorAll('a');
+    prefixOptions.forEach(option => {
+        option.addEventListener('mouseenter', () => hoverSound.play().catch(e => console.log('Error playing sound:', e)));
+    });
+
+    prefixBtn.addEventListener('click', () => {
+        document.getElementById('prefix-dropdown').classList.toggle('active');
+    });
+
+    prefixContent.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            const value = e.target.dataset.value;
+            prefixBtn.textContent = `${value} (${getTacticDescription(value)})`;
+            prefixBtn.dataset.value = value;
+            updateTranscription();
+            updateProgress();
+            document.getElementById('prefix-dropdown').classList.remove('active');
+        }
+    });
+
+    aggressivenessSlider.addEventListener('input', updateTranscription);
+
+    block1Title.addEventListener('click', toggleBlock1);
+
+    toggleBlock1Btn.addEventListener('click', toggleBlock1);
+
+    copyBtn.addEventListener('click', () => {
+        const errores = validarAlineacionCompleta();
+        if (errores.length > 0) {
+            alert(`No se puede copiar la alineación porque contiene errores:\n\n${errores.join('\n')}`);
+            return;
+        }
+        
+        navigator.clipboard.writeText(transcriptionOutput.value);
+        copyBtn.classList.add('clicked');
+        const tick = copyBtn.querySelector('.tick');
+        tick.classList.add('show');
+        setTimeout(() => {
+            copyBtn.classList.remove('clicked');
+            tick.classList.remove('show');
+        }, 1000);
+    });
+
+    downloadBtn.addEventListener('click', () => {
+        const errores = validarAlineacionCompleta();
+        if (errores.length > 0) {
+            alert(`No se puede descargar la alineación porque contiene errores:\n\n${errores.join('\n')}`);
+            return;
+        }
+        
+        const abbreviation = abbreviationInput.value || 'team';
+        const blob = new Blob([transcriptionOutput.value], { type: 'text/plain' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `${abbreviation}sht.txt`;
+        link.click();
+        downloadBtn.classList.add('clicked');
+        const tick = downloadBtn.querySelector('.tick');
+        tick.classList.add('show');
+        setTimeout(() => {
+            downloadBtn.classList.remove('clicked');
+            tick.classList.remove('show');
+        }, 1000);
+    });
+
+    clearFieldBtn.addEventListener('click', () => {
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field, .player-button.on-substitute');
+        playersOnField.forEach(player => {
+            player.classList.remove('on-field', 'on-substitute', 'section-1', 'section-2', 'section-3', 'section-4', 'section-5', 'section-6');
+            player.style.position = '';
+            player.style.left = '';
+            player.style.top = '';
+            const playerData = rosterData.find(p => formatDisplayName(p.name) === player.querySelector('.name').textContent);
+            player.innerHTML = `
+                <div class="name">${formatDisplayName(playerData.name)}</div>
+                <div class="position-fit">
+                    ${playerData.position} ${playerData.fit}%
+                </div>
+                <div class="stats">
+                    <span class="stat-st">${playerData.st}</span>
+                    <span class="stat-tk">${playerData.tk}</span>
+                    <span class="stat-ps">${playerData.ps}</span>
+                    <span class="stat-sh">${playerData.sh}</span>
+                </div>
+            `;
+            if (playerData.isTopPlayer) player.innerHTML += '<span class="star">★</span>';
+            player.dataset.position = playerData.position;
+            player.dataset.fit = playerData.fit;
+            player.draggable = true;
+            playersContainer.appendChild(player);
+        });
+        penaltyKicker = null;
+        filterPlayers();
+        updatePlayerNumbers();
+        updateTranscription();
+        updateProgress();
+        updateFormation();
+        updateAverageAge();
+        updateButtonGlows();
+        currentSubstituteIndex = 0;
+        isSelectingSubstitutes = false;
+        isSelectingPenalty = false;
+        selectSubstitutesBtn.classList.remove('active');
+        selectSubstitutesBtn.textContent = 'Seleccionar suplentes';
+        selectPenaltyBtn.classList.remove('active');
+        selectPenaltyBtn.textContent = 'Lanzador de penaltis';
+    });
+
+    createConditionalsBtn.addEventListener('click', openConditionalsPopup);
+
+    conditionalsOverlay.addEventListener('click', closeConditionalsPopup);
+
+    dropboxButton.addEventListener('click', () => {
+        dropboxPopup.style.display = 'block';
+        dropboxOverlay.style.display = 'block';
+        teamSelect.value = '';
+        loadingDropbox.style.display = 'none';
+    });
+
+    dropboxOverlay.addEventListener('click', () => {
+        if (loadingDropbox.style.display === 'none') {
+            dropboxPopup.style.display = 'none';
+            dropboxOverlay.style.display = 'none';
+        }
+    });
+
+    teamSelect.addEventListener('change', async () => {
+        const url = teamSelect.value;
+        if (!url) return;
+
+        loadingDropbox.style.display = 'block';
+
+        try {
+            const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+            const response = await fetch(proxyUrl);
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const text = await response.text();
+            rosterInput.value = text;
+            processRoster();
+            collapseBlock1();
+
+            const selectedTeam = teamSelect.options[teamSelect.selectedIndex].text;
+            abbreviationInput.value = teamAbbrMap[selectedTeam] || '';
+
+            // Actualizar el escudo del equipo
+            const badgeUrl = teamBadges[selectedTeam];
+            if (badgeUrl) {
+                teamBadge.src = badgeUrl;
+                teamBadge.style.display = 'block';
+            } else {
+                teamBadge.style.display = 'none';
+            }
+
+            dropboxPopup.style.display = 'none';
+            dropboxOverlay.style.display = 'none';
+        } catch (error) {
+            console.error('Error al cargar desde Dropbox:', error);
+            alert(`Error al cargar: ${error.message}`);
+        } finally {
+            loadingDropbox.style.display = 'none';
+        }
+    });
+
+    viewRosterLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (rosterInput.value.trim() === '') {
+            alert('No hay plantilla cargada.');
+            return;
+        }
+        showRosterPopup();
+    });
+
+    closeRosterBtn.addEventListener('click', closeRosterPopup);
+
+    rosterOverlay.addEventListener('click', closeRosterPopup);
+
+    function showRosterPopup() {
+        const rosterText = rosterInput.value.trim();
+        const lines = rosterText.split('\n').map(line => line.trim()).filter(line => line);
+        if (lines.length < 2) return;
+
+        const headers = lines[0].split(/\s+/);
+        const table = document.createElement('table');
+        const thead = document.createElement('thead');
+        const tbody = document.createElement('tbody');
+
+        const trHead = document.createElement('tr');
+        headers.forEach(header => {
+            const th = document.createElement('th');
+            th.textContent = header;
+            trHead.appendChild(th);
+        });
+        thead.appendChild(trHead);
+
+        lines.slice(2).forEach(line => {
+            const columns = line.split(/\s+/);
+            const tr = document.createElement('tr');
+            columns.forEach((col, index) => {
+                const td = document.createElement(index === 0 ? 'th' : 'td');
+                // Formatear nombres para la primera columna
+                if (index === 0) {
+                    td.textContent = formatDisplayName(col);
+                } else {
+                    td.textContent = col;
+                }
+                tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+        });
+
+        table.appendChild(thead);
+        table.appendChild(tbody);
+        rosterTableContainer.innerHTML = '';
+        rosterTableContainer.appendChild(table);
+
+        rosterPopup.style.display = 'block';
+        rosterOverlay.style.display = 'block';
+    }
+
+    function closeRosterPopup() {
+        rosterPopup.style.display = 'none';
+        rosterOverlay.style.display = 'none';
+    }
+
+    function updateButtonGlows() {
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute').length;
+        
+        // Glow para "Seleccionar suplentes"
+        if (playersOnField === 11 && substitutes < 5) {
+            selectSubstitutesBtn.classList.add('glow-yellow');
+        } else {
+            selectSubstitutesBtn.classList.remove('glow-yellow');
+        }
+        
+        // Glow para "Lanzador de penaltis"
+        if (playersOnField === 11 && substitutes === 5 && !penaltyKicker) {
+            selectPenaltyBtn.classList.add('glow-yellow');
+        } else {
+            selectPenaltyBtn.classList.remove('glow-yellow');
+        }
+    }
+
+    function getTacticDescription(value) {
+        const descriptions = {
+            'A': 'Atacante',
+            'C': 'Contragolpe',
+            'D': 'Defensiva',
+            'E': 'Europea',
+            'L': 'Balones largos',
+            'N': 'Equilibrada',
+            'P': 'Pases cortos',
+            'T': 'Temeraria'
+        };
+        return descriptions[value] || '';
+    }
+
+    function formatDisplayName(name) {
+        if (name.includes('_')) {
+            const parts = name.split('_');
+            if (parts[0].length === 1 && parts.length === 2) {
+                return parts[1]; // Caso K_Benzema -> Benzema
+            }
+            return parts.join(' '); // Caso De_Jong -> De Jongs
+        }
+        return name; // Caso Arthur -> Arthur
+    }
+
+    function toggleBlock1() {
+        block1Container.classList.toggle('collapsed');
+        block1Title.classList.toggle('collapsed');
+        toggleBlock1Btn.textContent = block1Container.classList.contains('collapsed') ? '▼' : '▲';
+    }
+
+    function collapseBlock1() {
+        block1Container.classList.add('collapsed');
+        block1Title.classList.add('collapsed');
+        toggleBlock1Btn.textContent = '▼';
+    }
+
+    function processRoster() {
+        const rosterText = rosterInput.value.trim();
+        const lines = rosterText.split('\n').filter(line => line.trim()).slice(2);
+        rosterData = [];
+
+        lines.forEach(line => {
+            const columns = line.split(/\s+/);
+            if (columns.length < 27) return;
+
+            const name = columns[0];
+            const age = parseInt(columns[1]);
+            const nationality = columns[2].toLowerCase();
+            const st = parseInt(columns[3]);
+            const tk = parseInt(columns[4]);
+            const ps = parseInt(columns[5]);
+            const sh = parseInt(columns[6]);
+            const inj = parseInt(columns[24]);
+            const sus = parseInt(columns[25]);
+            const fit = parseInt(columns[26]);
+
+            const stats = { st, tk, ps, sh };
+            const maxStat = Math.max(st, tk, ps, sh);
+            let position = '';
+            if (maxStat === st) position = 'GK';
+            else if (maxStat === tk) position = 'DF';
+            else if (maxStat === ps) position = 'MF';
+            else if (maxStat === sh) position = 'FW';
+
+            rosterData.push({ name, age, nationality, st, tk, ps, sh, fit, position, inj, sus });
+        });
+
+        markTopPlayers();
+        filterPlayers();
+        setupFieldDragDrop();
+        updateTranscription();
+        updateProgress();
+        updateButtonGlows();
+    }
+
+    function markTopPlayers() {
+        const gks = rosterData.filter(p => p.position === 'GK').sort((a, b) => b.st - a.st);
+        const dfs = rosterData.filter(p => p.position === 'DF').sort((a, b) => b.tk - a.tk);
+        const mfs = rosterData.filter(p => p.position === 'MF').sort((a, b) => b.ps - a.ps);
+        const fws = rosterData.filter(p => p.position === 'FW').sort((a, b) => b.sh - a.sh);
+
+        if (gks.length > 0) gks[0].isTopPlayer = true;
+        dfs.slice(0, 4).forEach(df => df.isTopPlayer = true);
+        mfs.slice(0, 4).forEach(mf => mf.isTopPlayer = true);
+        fws.slice(0, 2).forEach(fw => fw.isTopPlayer = true);
+    }
+
+    function filterPlayers() {
+        playersContainer.innerHTML = '';
+        const selectedPosition = Array.from(positionCheckboxes).find(cb => cb.checked)?.value;
+        const filterHighFit = fitCheckbox.checked;
+        const showAll = allPlayersCheckbox.checked;
+
+        const usedPlayers = Array.from(fieldContainer.querySelectorAll('.player-button')).map(p => {
+            const displayedName = p.querySelector('.name').textContent;
+            return rosterData.find(player => formatDisplayName(player.name) === displayedName)?.name || displayedName;
+        });
+
+        const fieldPlayers = Array.from(fieldContainer.querySelectorAll('.player-button.on-field')).map(p => {
+            const displayedName = p.querySelector('.name').textContent;
+            return rosterData.find(player => formatDisplayName(player.name) === displayedName)?.name;
+        });
+
+        rosterData.forEach((player, index) => {
+            const showByPosition = showAll || (!selectedPosition || player.position === selectedPosition);
+            const showByFit = !filterHighFit || player.fit >= 90;
+            const isUsed = usedPlayers.includes(player.name);
+            const isOnField = fieldPlayers.includes(player.name);
+
+            let shouldShow = false;
+            if (isSelectingSubstitutes) {
+                shouldShow = showByPosition && showByFit && !isUsed;
+            } else if (isSelectingPenalty) {
+                shouldShow = isOnField;
+            } else {
+                shouldShow = showByPosition && showByFit && !isUsed;
+            }
+
+            if (shouldShow) {
+                const button = document.createElement('button');
+                button.className = 'player-button';
+                if (player.inj !== 0 || player.sus !== 0) {
+                    button.classList.add('unavailable');
+                    let tooltipText = '';
+                    if (player.inj !== 0 && player.sus !== 0) tooltipText = 'Lesionado y sancionado';
+                    else if (player.inj !== 0) tooltipText = 'Lesionado';
+                    else if (player.sus !== 0) tooltipText = 'Sancionado';
+                    button.innerHTML = `
+                        <div class="name">${formatDisplayName(player.name)}</div>
+                        <div class="position-fit">
+                            ${player.position} ${player.fit}%
+                        </div>
+                        <div class="stats">
+                            <span class="stat-st">${player.st}</span>
+                            <span class="stat-tk">${player.tk}</span>
+                            <span class="stat-ps">${player.ps}</span>
+                            <span class="stat-sh">${player.sh}</span>
+                        </div>
+                        <span class="tooltip">${tooltipText}</span>
+                    `;
+                } else {
+                    button.draggable = true;
+                    button.innerHTML = `
+                        <div class="name">${formatDisplayName(player.name)}</div>
+                        <div class="position-fit">
+                            ${player.position} ${player.fit}%
+                        </div>
+                        <div class="stats">
+                            <span class="stat-st">${player.st}</span>
+                            <span class="stat-tk">${player.tk}</span>
+                            <span class="stat-ps">${player.ps}</span>
+                            <span class="stat-sh">${player.sh}</span>
+                        </div>
+                    `;
+                    if (player.isTopPlayer) button.innerHTML += '<span class="star">★</span>';
+                    button.addEventListener('dragstart', (e) => {
+                        button.classList.add('dragging');
+                        const dragData = {
+                            name: player.name,
+                            age: player.age,
+                            nationality: player.nationality,
+                            position: player.position,
+                            fit: player.fit,
+                            st: player.st,
+                            tk: player.tk,
+                            ps: player.ps,
+                            sh: player.sh
+                        };
+                        e.dataTransfer.setData('text/plain', JSON.stringify(dragData));
+                    });
+                    button.addEventListener('dragend', () => {
+                        button.classList.remove('dragging');
+                        updateTranscription();
+                        updateProgress();
+                        updateFormation();
+                        updateAverageAge();
+                        updateButtonGlows();
+                    });
+                    button.addEventListener('click', () => {
+                        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+                        if (!isSelectingSubstitutes && !isSelectingPenalty && playersOnField === 11) {
+                            alert('Ya hay 11 jugadores seleccionados. Para seleccionar los suplentes, haz click en "Seleccionar suplentes".');
+                            return;
+                        }
+                        if (isSelectingSubstitutes && currentSubstituteIndex < 5) {
+                            const usedPlayers = Array.from(fieldContainer.querySelectorAll('.player-button')).map(p => formatDisplayName(p.querySelector('.name').textContent));
+                            if (usedPlayers.includes(formatDisplayName(player.name))) return;
+                            const substituteSlots = substitutesContainer.querySelectorAll('.substitute-slot');
+                            const targetSlot = substituteSlots[currentSubstituteIndex];
+                            const slotNumber = parseInt(targetSlot.dataset.number);
+
+                            button.classList.add('on-substitute');
+                            button.innerHTML = `
+                                <div class="number">${slotNumber}</div>
+                                <div class="name">${formatDisplayName(player.name)}</div>
+                                <div class="player-tooltip">
+                                    ${player.position} ${player.fit}%<br>
+                                    GK: ${player.st} DF: ${player.tk}<br>
+                                    MF: ${player.ps} FW: ${player.sh}
+                                </div>
+                                <button class="remove-btn">×</button>
+                            `;
+                            const removeBtn = button.querySelector('.remove-btn');
+                            removeBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                button.classList.remove('on-substitute');
+                                button.style.position = '';
+                                button.style.left = '';
+                                button.style.top = '';
+                                button.innerHTML = `
+                                    <div class="name">${formatDisplayName(player.name)}</div>
+                                    <div class="position-fit">
+                                        ${player.position} ${player.fit}%
+                                    </div>
+                                    <div class="stats">
+                                        <span class="stat-st">${player.st}</span>
+                                        <span class="stat-tk">${player.tk}</span>
+                                        <span class="stat-ps">${player.ps}</span>
+                                        <span class="stat-sh">${player.sh}</span>
+                                    </div>
+                                `;
+                                if (player.isTopPlayer) button.innerHTML += '<span class="star">★</span>';
+                                button.dataset.position = player.position;
+                                button.dataset.fit = player.fit;
+                                button.draggable = true;
+                                playersContainer.appendChild(button);
+                                filterPlayers();
+                                updatePlayerNumbers();
+                                updateTranscription();
+                                updateProgress();
+                                updateFormation();
+                                updateAverageAge();
+                                updateButtonGlows();
+                                currentSubstituteIndex--;
+                            });
+                            button.style.position = 'absolute';
+                            button.style.left = '0px';
+                            button.style.top = '0px';
+                            targetSlot.appendChild(button);
+                            currentSubstituteIndex++;
+                            filterPlayers();
+                            updateTranscription();
+                            updateProgress();
+                            updateFormation();
+                            updateAverageAge();
+                            updateButtonGlows();
+                            if (currentSubstituteIndex === 5) {
+                                isSelectingSubstitutes = false;
+                                selectSubstitutesBtn.classList.remove('active');
+                                selectSubstitutesBtn.textContent = 'Seleccionar suplentes';
+                            }
+                        } else if (isSelectingPenalty && isOnField) {
+                            penaltyKicker = player.name;
+                            isSelectingPenalty = false;
+                            selectPenaltyBtn.classList.remove('active');
+                            selectPenaltyBtn.textContent = 'Lanzador de penaltis';
+                            filterPlayers();
+                            updateTranscription();
+                            updateProgress();
+                            updateButtonGlows();
+                        }
+                    });
+                }
+                button.dataset.position = player.position;
+                button.dataset.fit = player.fit;
+
+                playersContainer.appendChild(button);
+            }
+        });
+    }
+
+    function updatePlayerNumbers() {
+        const playersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+        const sectionPlayers = {};
+        for (let i = 1; i <= 6; i++) {
+            sectionPlayers[i] = playersOnField.filter(p => p.classList.contains(`section-${i}`))
+                .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+        }
+
+        let currentNumber = 1;
+        for (let i = 1; i <= 6; i++) {
+            sectionPlayers[i].forEach(player => {
+                const numberDiv = player.querySelector('.number');
+                if (numberDiv) numberDiv.textContent = currentNumber++;
+            });
+        }
+
+        const substituteSlots = Array.from(substitutesContainer.querySelectorAll('.substitute-slot'));
+        substituteSlots.forEach((slot, index) => {
+            const player = slot.querySelector('.player-button');
+            if (player) {
+                const numberDiv = player.querySelector('.number');
+                if (numberDiv) numberDiv.textContent = 12 + index;
+            }
+        });
+        updateTranscription();
+        updateFormation();
+        updateAverageAge();
+    }
+
+    function formatTranscription(text) {
+        text = text.replace(/SCORE\s*<=\s*/g, 'SCORE <= ');
+        text = text.replace(/SCORE\s*=\s*/g, 'SCORE = ');
+        text = text.replace(/SCORE\s*>=\s*/g, 'SCORE >= ');
+        text = text.replace(/SHOTS\s*<=\s*/g, 'SHOTS <= ');
+        text = text.replace(/SHOTS\s*=\s*/g, 'SHOTS = ');
+        text = text.replace(/SHOTS\s*>=\s*/g, 'SHOTS >= ');
+
+        text = text.split('\n').map(line => {
+            return line.replace(/( IF .*?) IF /g, '$1 ');
+        }).join('\n');
+
+        const lines = text.split('\n');
+        const uniqueLines = [];
+        const seenLines = new Set();
+
+        for (const line of lines) {
+            const trimmedLine = line.trim();
+            if (!seenLines.has(trimmedLine)) {
+                seenLines.add(trimmedLine);
+                uniqueLines.push(line);
+            }
+        }
+
+        text = uniqueLines.join('\n');
+
+        text = text.replace(/(FW .+)\n(GK .+)/g, '$1\n\n$2');
+        text = text.replace(/(AM .+)\n(GK .+)/g, '$1\n\n$2');
+        text = text.replace(/(MF .+)\n(GK .+)/g, '$1\n\n$2');
+        text = text.replace(/(\n)(PK: .+)/g, '\n\n$2');
+
+        return text;
+    }
+
+    function updateTranscription() {
+        const playersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+        const sectionPlayers = {};
+        for (let i = 1; i <= 6; i++) {
+            sectionPlayers[i] = playersOnField.filter(p => p.classList.contains(`section-${i}`))
+                .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+        }
+
+        const substitutes = Array.from(substitutesContainer.querySelectorAll('.player-button.on-substitute'))
+            .sort((a, b) => parseInt(a.querySelector('.number').textContent) - parseInt(b.querySelector('.number').textContent));
+
+        let transcription = '';
+        const abbreviation = abbreviationInput.value || '';
+        const prefix = prefixBtn.dataset.value || '';
+        const aggressiveness = parseInt(aggressivenessSlider.value);
+
+        transcription += `${abbreviation}\n`;
+        transcription += `${prefix}\n`;
+        transcription += '\n';
+
+        if (sectionPlayers[1].length > 0) {
+            sectionPlayers[1].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `GK ${originalName}\n`;
+            });
+        }
+
+        if (sectionPlayers[2].length > 0) {
+            sectionPlayers[2].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `DF ${originalName}\n`;
+            });
+        }
+
+        if (sectionPlayers[3].length > 0) {
+            sectionPlayers[3].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `DM ${originalName}\n`;
+            });
+        }
+
+        if (sectionPlayers[4].length > 0) {
+            sectionPlayers[4].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `MF ${originalName}\n`;
+            });
+        }
+
+        if (sectionPlayers[5].length > 0) {
+            sectionPlayers[5].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `AM ${originalName}\n`;
+            });
+        }
+
+        if (sectionPlayers[6].length > 0) {
+            sectionPlayers[6].forEach(player => {
+                const displayedName = player.querySelector('.name').textContent;
+                const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+                transcription += `FW ${originalName}\n`;
+            });
+        }
+
+        if (playersOnField.length > 0 && substitutes.length > 0) {
+            transcription += '\n';
+        }
+
+        substitutes.forEach((player, index) => {
+            const displayedName = player.querySelector('.name').textContent;
+            const originalName = rosterData.find(p => formatDisplayName(p.name) === displayedName)?.name || displayedName;
+            let position = '';
+            const playerData = rosterData.find(p => p.name === originalName);
+            if (playerData) {
+                // El primer suplente (índice 0) siempre será GK
+                if (index === 0) {
+                    position = 'GK';
+                } else {
+                    switch (playerData.position) {
+                        case 'GK': position = 'GK'; break;
+                        case 'DF': position = 'DF'; break;
+                        case 'MF': position = 'MF'; break;
+                        case 'FW': position = 'FW'; break;
+                    }
+                }
+            }
+            transcription += `${position} ${originalName}\n`;
+        });
+
+        const hasPK = !!penaltyKicker;
+        const hasAGG = aggressiveness > 0;
+        const hasConditionals = conditionalsContent || customConditionals.length > 0;
+
+        if (hasPK || hasAGG || hasConditionals) {
+            if (substitutes.length > 0 || playersOnField.length > 0) {
+                transcription += '\n';
+            }
+        }
+
+        if (hasPK) {
+            const displayedPK = formatDisplayName(penaltyKicker);
+            const originalPK = rosterData.find(p => formatDisplayName(p.name) === displayedPK)?.name || displayedPK;
+            transcription += `PK: ${originalPK}\n`;
+        }
+
+        if (hasAGG) {
+            if (hasPK) transcription += '\n';
+            transcription += `AGG ${aggressiveness}\n`;
+        }
+
+        if (hasConditionals) {
+            if (hasPK || hasAGG) transcription += '\n';
+            if (conditionalsContent) {
+                transcription += conditionalsContent + '\n';
+            }
+            if (customConditionals.length > 0) {
+                transcription += customConditionals.join('\n') + '\n';
+            }
+        }
+
+        transcriptionOutput.value = formatTranscription(transcription.trim()) || 'Aún no hay alineación.';
+    }
+
+    function updateProgress() {
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute').length;
+        const abbreviation = abbreviationInput.value.length === 3;
+        const tactic = prefixBtn.dataset.value !== '';
+        const penalty = !!penaltyKicker;
+
+        const totalTasks = 4;
+        let completedTasks = 0;
+        if (abbreviation) completedTasks++;
+        if (tactic) completedTasks++;
+        if (playersOnField === 11 && substitutes === 5) completedTasks++;
+        if (penalty) completedTasks++;
+
+        const progressPercentage = (completedTasks / totalTasks) * 100;
+        progressFill.style.width = `${progressPercentage}%`;
+    }
+
+    function updateFormation() {
+        const playersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+        const sectionPlayers = {};
+        for (let i = 1; i <= 6; i++) {
+            sectionPlayers[i] = playersOnField.filter(p => p.classList.contains(`section-${i}`)).length;
+        }
+
+        if (playersOnField.length === 0) {
+            formationDisplay.style.display = 'none';
+            return;
+        }
+
+        const formation = [
+            sectionPlayers[2],
+            sectionPlayers[3],
+            sectionPlayers[4],
+            sectionPlayers[5],
+            sectionPlayers[6]
+        ].filter(count => count > 0).join('-');
+
+        formationDisplay.style.display = 'block';
+        formationDisplay.style.bottom = `${fieldContainer.querySelector('.field-section[data-section="1"]').height}px`;
+        formationDisplay.textContent = formation;
+    }
+
+    function updateAverageAge() {
+        const playersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+        if (playersOnField.length === 0) {
+            averageAgeDisplay.style.display = 'none';
+            return;
+        }
+
+        const totalAge = playersOnField.reduce((sum, player) => {
+            const name = player.querySelector('.name').textContent;
+            const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+            return sum + (playerData ? playerData.age : 0);
+        }, 0);
+
+        const averageAge = (totalAge / playersOnField.length).toFixed(1);
+        averageAgeDisplay.style.display = 'block';
+        averageAgeDisplay.style.bottom = `${fieldContainer.querySelector('.field-section[data-section="1"]').height}px`;
+        averageAgeDisplay.textContent = `Edad media: ${averageAge}`;
+    }
+
+    function setupFieldDragDrop() {
+        fieldContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        fieldContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+            const button = document.querySelector('.player-button.dragging');
+            if (!button) return;
+
+            const usedPlayers = Array.from(fieldContainer.querySelectorAll('.player-button')).map(p => formatDisplayName(p.querySelector('.name').textContent));
+            if (!button.classList.contains('on-field') && !button.classList.contains('on-substitute') && usedPlayers.includes(formatDisplayName(data.name))) return;
+
+            const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field');
+            if (!button.classList.contains('on-field') && playersOnField.length >= 11) return;
+
+            const rect = fieldContainer.getBoundingClientRect();
+            const xDrop = e.clientX - rect.left - 15;
+            const yDrop = e.clientY - rect.top;
+
+            const sections = fieldContainer.querySelectorAll('.field-section');
+            const sectionHeights = Array.from(sections).map(section => section.offsetHeight);
+            const sectionOffsets = sectionHeights.map((_, i) => sectionHeights.slice(0, i).reduce((a, b) => a + b, 0));
+            let section = 1;
+            let sectionTop = 0;
+            let sectionHeight = sectionHeights[0];
+            for (let i = 0; i < sectionOffsets.length; i++) {
+                if (yDrop >= sectionOffsets[i]) {
+                    section = 6 - i;
+                    sectionTop = sectionOffsets[i];
+                    sectionHeight = sectionHeights[i];
+                }
+            }
+
+            const existingGK = fieldContainer.querySelector('.player-button.on-field.section-1');
+            if (section === 1 && existingGK && !button.classList.contains('on-field')) {
+                section = 2;
+                sectionTop = sectionOffsets[4];
+                sectionHeight = sectionHeights[4];
+            }
+
+            if (playersOnField.length === 0) {
+                if (data.position !== 'GK') {
+                    alert('El primer jugador debe colocarlo como GK.');
+                    return;
+                }
+                section = 1;
+                sectionTop = sectionOffsets[5];
+                sectionHeight = sectionHeights[5];
+            }
+
+            let x = xDrop;
+            const y = sectionTop + (sectionHeight / 2) - 15;
+
+            if (section === 1) {
+                x = fieldContainer.offsetWidth / 2 - 15;
+            }
+
+            let overlappingPlayer = null;
+            if (button.classList.contains('on-field')) {
+                const allPlayersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+                allPlayersOnField.forEach(player => {
+                    if (player !== button) {
+                        const playerRect = player.getBoundingClientRect();
+                        const dropRect = {
+                            left: e.clientX - 15,
+                            right: e.clientX + 15,
+                            top: e.clientY - 15,
+                            bottom: e.clientY + 15
+                        };
+                        if (dropRect.left < playerRect.right &&
+                            dropRect.right > playerRect.left &&
+                            dropRect.top < playerRect.bottom &&
+                            dropRect.bottom > playerRect.top) {
+                            overlappingPlayer = player;
+                        }
+                    }
+                });
+            }
+
+            if (overlappingPlayer) {
+                const oldX = button.style.left;
+                const oldY = button.style.top;
+                const oldSection = parseInt(button.className.match(/section-(\d)/)?.[1] || 0);
+                const newSection = parseInt(overlappingPlayer.className.match(/section-(\d)/)?.[1] || 0);
+
+                button.classList.add('swapping');
+                overlappingPlayer.classList.add('swapping');
+
+                button.style.left = overlappingPlayer.style.left;
+                button.style.top = overlappingPlayer.style.top;
+                overlappingPlayer.style.left = oldX;
+                overlappingPlayer.style.top = oldY;
+
+                if (oldSection && newSection) {
+                    button.classList.remove(`section-${oldSection}`);
+                    button.classList.add(`section-${newSection}`);
+                    overlappingPlayer.classList.remove(`section-${newSection}`);
+                    overlappingPlayer.classList.add(`section-${oldSection}`);
+                }
+
+                setTimeout(() => {
+                    button.classList.remove('swapping');
+                    overlappingPlayer.classList.remove('swapping');
+                }, 300);
+            } else if (!button.classList.contains('on-field') && !button.classList.contains('on-substitute')) {
+                button.classList.add('on-field', `section-${section}`);
+                button.innerHTML = `
+                    <div class="number">?</div>
+                    <div class="name">${formatDisplayName(data.name)}</div>
+                    <div class="player-tooltip">
+                        ${data.position} ${data.fit}%<br>
+                        GK: ${data.st} DF: ${data.tk}<br>
+                        MF: ${data.ps} FW: ${data.sh}
+                    </div>
+                    <button class="remove-btn">×</button>
+                `;
+                button.style.position = 'absolute';
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+                button.draggable = true;
+
+                const removeBtn = button.querySelector('.remove-btn');
+                removeBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    button.classList.remove('on-field', `section-${section}`);
+                    button.style.position = '';
+                    button.style.left = '';
+                    button.style.top = '';
+                    button.innerHTML = `
+                        <div class="name">${formatDisplayName(data.name)}</div>
+                        <div class="position-fit">
+                            ${data.position} ${data.fit}%
+                        </div>
+                        <div class="stats">
+                            <span class="stat-st">${data.st}</span>
+                            <span class="stat-tk">${data.tk}</span>
+                            <span class="stat-ps">${data.ps}</span>
+                            <span class="stat-sh">${data.sh}</span>
+                        </div>
+                    `;
+                    if (data.isTopPlayer) button.innerHTML += '<span class="star">★</span>';
+                    button.dataset.position = data.position;
+                    button.dataset.fit = data.fit;
+                    button.draggable = true;
+                    playersContainer.appendChild(button);
+                    filterPlayers();
+                    updatePlayerNumbers();
+                    updateTranscription();
+                    updateProgress();
+                    updateFormation();
+                    updateAverageAge();
+                    updateButtonGlows();
+                });
+
+                fieldContainer.appendChild(button);
+            } else {
+                button.style.left = `${x}px`;
+                button.style.top = `${y}px`;
+                const oldSection = parseInt(button.className.match(/section-(\d)/)?.[1] || 0);
+                if (oldSection !== section) {
+                    button.classList.remove(`section-${oldSection}`);
+                    button.classList.add(`section-${section}`);
+                }
+            }
+
+            updatePlayerNumbers();
+            updateTranscription();
+            updateProgress();
+            updateFormation();
+            updateAverageAge();
+            updateButtonGlows();
+        });
+
+        substitutesContainer.addEventListener('dragover', (e) => {
+            e.preventDefault();
+        });
+
+        substitutesContainer.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+            const button = document.querySelector('.player-button.dragging');
+            if (!button) return;
+
+            const usedPlayers = Array.from(fieldContainer.querySelectorAll('.player-button')).map(p => formatDisplayName(p.querySelector('.name').textContent));
+            if (!button.classList.contains('on-substitute') && usedPlayers.includes(formatDisplayName(data.name))) return;
+
+            const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute');
+            if (!button.classList.contains('on-substitute') && substitutes.length >= 5) return;
+
+            const targetSlot = e.target.closest('.substitute-slot');
+            if (!targetSlot || targetSlot.querySelector('.player-button')) return;
+
+            const slotNumber = parseInt(targetSlot.dataset.number);
+
+            button.classList.add('on-substitute');
+            button.innerHTML = `
+                <div class="number">${slotNumber}</div>
+                <div class="name">${formatDisplayName(data.name)}</div>
+                <div class="player-tooltip">
+                    ${data.position} ${data.fit}%<br>
+                    GK: ${data.st} DF: ${data.tk}<br>
+                    MF: ${data.ps} FW: ${data.sh}
+                </div>
+                <button class="remove-btn">×</button>
+            `;
+            button.style.position = 'absolute';
+            button.style.left = '0px';
+            button.style.top = '0px';
+            button.draggable = true;
+
+            const removeBtn = button.querySelector('.remove-btn');
+            removeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                button.classList.remove('on-substitute');
+                button.style.position = '';
+                button.style.left = '';
+                button.style.top = '';
+                button.innerHTML = `
+                    <div class="name">${formatDisplayName(data.name)}</div>
+                    <div class="position-fit">
+                        ${data.position} ${data.fit}%
+                    </div>
+                    <div class="stats">
+                        <span class="stat-st">${data.st}</span>
+                        <span class="stat-tk">${data.tk}</span>
+                        <span class="stat-ps">${data.ps}</span>
+                        <span class="stat-sh">${data.sh}</span>
+                    </div>
+                `;
+                if (data.isTopPlayer) button.innerHTML += '<span class="star">★</span>';
+                button.dataset.position = data.position;
+                button.dataset.fit = data.fit;
+                button.draggable = true;
+                playersContainer.appendChild(button);
+                filterPlayers();
+                updatePlayerNumbers();
+                updateTranscription();
+                updateProgress();
+                updateFormation();
+                updateAverageAge();
+                updateButtonGlows();
+            });
+
+            targetSlot.appendChild(button);
+            updatePlayerNumbers();
+            updateTranscription();
+            updateProgress();
+            updateFormation();
+            updateAverageAge();
+            updateButtonGlows();
+        });
+    }
+
+    function openConditionalsPopup() {
+        conditionalsPopup.style.display = 'block';
+        conditionalsOverlay.style.display = 'block';
+        setupConditionalsPopup();
+        updateCurrentConditionals();
+    }
+
+    function closeConditionalsPopup() {
+        const activeTab = document.querySelector('#conditionals-popup .tab.active').dataset.tab;
+        const content = document.getElementById(activeTab + '-tab');
+        const selects = content.querySelectorAll('select');
+        let hasSelections = false;
+        selects.forEach(select => {
+            if (select.value !== '') hasSelections = true;
+        });
+        if (hasSelections && !confirm('¿Estás seguro de cerrar sin añadir el condicional?')) {
+            return;
+        }
+        conditionalsPopup.style.display = 'none';
+        conditionalsOverlay.style.display = 'none';
+    }
+
+    function setupConditionalsPopup() {
+        const tabs = conditionalsPopup.querySelectorAll('.tab');
+        const contents = conditionalsPopup.querySelectorAll('.tab-content');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.tab + '-tab').classList.add('active');
+            });
+        });
+
+        const tacticNew = document.getElementById('tactic-new');
+        tacticNew.innerHTML = '<option value="">Seleccionar</option>';
+        ['A', 'C', 'D', 'E', 'L', 'N', 'P', 'T'].forEach(t => {
+            tacticNew.innerHTML += `<option value="${t}">${t}</option>`;
+        });
+
+        const subOff = document.getElementById('sub-off');
+        const subOn = document.getElementById('sub-on');
+        const repositionPlayer = document.getElementById('reposition-player');
+        const aggressionNew = document.getElementById('aggression-new');
+
+        const playersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+        const substitutes = Array.from(fieldContainer.querySelectorAll('.player-button.on-substitute'));
+
+        const playerNumbers = {};
+        let currentNumber = 1;
+        for (let i = 1; i <= 6; i++) {
+            const sectionPlayers = playersOnField.filter(p => p.classList.contains(`section-${i}`))
+                .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
+            sectionPlayers.forEach(player => {
+                playerNumbers[player.querySelector('.name').textContent] = currentNumber++;
+            });
+        }
+        substitutes.forEach((player, index) => {
+            playerNumbers[player.querySelector('.name').textContent] = 12 + index;
+        });
+
+        subOff.innerHTML = '<option value="">Seleccionar</option>';
+        if (playersOnField.length > 0) {
+            const groupOption = document.createElement('option');
+            groupOption.disabled = true;
+            groupOption.textContent = '── Titulares ──';
+            groupOption.className = 'player-group-option';
+            subOff.appendChild(groupOption);
+            playersOnField.forEach(player => {
+                const name = player.querySelector('.name').textContent;
+                const number = playerNumbers[name];
+                const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                if (playerData) {
+                    subOff.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position}) (${playerData.fit}%)</option>`;
+                }
+            });
+        }
+        if (substitutes.length > 0) {
+            const groupOption = document.createElement('option');
+            groupOption.disabled = true;
+            groupOption.textContent = '── Suplentes ──';
+            groupOption.className = 'player-group-option';
+            subOff.appendChild(groupOption);
+            substitutes.forEach(player => {
+                const name = player.querySelector('.name').textContent;
+                const number = playerNumbers[name];
+                const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                if (playerData) {
+                    subOff.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position}) (${playerData.fit}%)</option>`;
+                }
+            });
+        }
+
+        subOn.innerHTML = '<option value="">Seleccionar</option>';
+        substitutes.forEach(player => {
+            const name = player.querySelector('.name').textContent;
+            const number = playerNumbers[name];
+            const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+            if (playerData) {
+                subOn.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position}) (${playerData.fit}%)</option>`;
+            }
+        });
+
+        repositionPlayer.innerHTML = '<option value="">Seleccionar</option>';
+        if (playersOnField.length > 0) {
+            const groupOption = document.createElement('option');
+            groupOption.disabled = true;
+            groupOption.textContent = '── Titulares ──';
+            groupOption.className = 'player-group-option';
+            repositionPlayer.appendChild(groupOption);
+            playersOnField.forEach(player => {
+                const name = player.querySelector('.name').textContent;
+                const number = playerNumbers[name];
+                const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                if (playerData) {
+                    repositionPlayer.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position}) (${playerData.fit}%)</option>`;
+                }
+            });
+        }
+        if (substitutes.length > 0) {
+            const groupOption = document.createElement('option');
+            groupOption.disabled = true;
+            groupOption.textContent = '── Suplentes ──';
+            groupOption.className = 'player-group-option';
+            repositionPlayer.appendChild(groupOption);
+            substitutes.forEach(player => {
+                const name = player.querySelector('.name').textContent;
+                const number = playerNumbers[name];
+                const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                if (playerData) {
+                    repositionPlayer.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position}) (${playerData.fit}%)</option>`;
+                }
+            });
+        }
+
+        aggressionNew.innerHTML = '<option value="">Seleccionar</option>';
+        for (let i = 0; i <= 20; i++) {
+            aggressionNew.innerHTML += `<option value="${i}">${i}</option>`;
+        }
+
+        const minuteIfSelects = ['tactic-if-min', 'sub-if-min', 'reposition-if-min', 'aggression-if-min'];
+        minuteIfSelects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = `
+                <option value="">Seleccionar</option>
+                <option value="=">= (igual a...)</option>
+                <option value="<="><= (anterior o igual a...)</option>
+                <option value=">=">>= (posterior o igual a...)</option>
+            `;
+        });
+
+        const scoreIfSelects = ['tactic-if-score', 'sub-if-score', 'reposition-if-score', 'aggression-if-score'];
+        scoreIfSelects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = `
+                <option value="">Seleccionar</option>
+                <option value="=">= (igual a...)</option>
+                <option value="<="><= (inferior o igual a...)</option>
+                <option value=">=">>= (superior o igual a...)</option>
+            `;
+        });
+
+        const shotsIfSelects = ['tactic-if-shots', 'sub-if-shots', 'reposition-if-shots', 'aggression-if-shots'];
+        shotsIfSelects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = `
+                <option value="">Seleccionar</option>
+                <option value="=">= (igual a...)</option>
+                <option value="<="><= (inferior o igual a...)</option>
+                <option value=">=">>= (superior o igual a...)</option>
+            `;
+        });
+
+        ['tactic', 'sub', 'reposition', 'aggression'].forEach(prefix => {
+            const minValue1 = document.getElementById(prefix + '-min-value1');
+            minValue1.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = 1; i <= 30; i++) {
+                minValue1.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            const minValue2 = document.getElementById(prefix + '-min-value2');
+            minValue2.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = 31; i <= 60; i++) {
+                minValue2.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            const minValue3 = document.getElementById(prefix + '-min-value3');
+            minValue3.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = 61; i <= 120; i++) {
+                minValue3.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+
+            minValue1.addEventListener('change', () => {
+                if (minValue1.value !== '') {
+                    minValue2.value = '';
+                    minValue3.value = '';
+                }
+            });
+            minValue2.addEventListener('change', () => {
+                if (minValue2.value !== '') {
+                    minValue1.value = '';
+                    minValue3.value = '';
+                }
+            });
+            minValue3.addEventListener('change', () => {
+                if (minValue3.value !== '') {
+                    minValue1.value = '';
+                    minValue2.value = '';
+                }
+            });
+
+            const shotsValue = document.getElementById(prefix + '-shots-value');
+            shotsValue.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = 0; i <= 30; i++) {
+                shotsValue.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+        });
+
+        const scoreSelects = ['tactic-score-value', 'sub-score-value', 'reposition-score-value', 'aggression-score-value'];
+        scoreSelects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = '<option value="">Seleccionar</option>';
+            for (let i = -3; i <= 3; i++) {
+                select.innerHTML += `<option value="${i}">${i}</option>`;
+            }
+        });
+
+        const conditionSelects = [
+            'tactic-if-yellow', 'tactic-if-red', 'tactic-if-injured',
+            'sub-if-yellow', 'sub-if-red', 'sub-if-injured',
+            'reposition-if-yellow', 'reposition-if-red', 'reposition-if-injured',
+            'aggression-if-yellow', 'aggression-if-red', 'aggression-if-injured'
+        ];
+        conditionSelects.forEach(id => {
+            const select = document.getElementById(id);
+            select.innerHTML = '<option value="">Seleccionar</option>';
+            if (playersOnField.length > 0) {
+                const groupOption = document.createElement('option');
+                groupOption.disabled = true;
+                groupOption.textContent = '── Titulares ──';
+                groupOption.className = 'player-group-option';
+                select.appendChild(groupOption);
+                playersOnField.forEach(player => {
+                    const name = player.querySelector('.name').textContent;
+                    const number = playerNumbers[name];
+                    const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                    if (playerData) {
+                        select.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position})</option>`;
+                    }
+                });
+            }
+            if (substitutes.length > 0) {
+                const groupOption = document.createElement('option');
+                groupOption.disabled = true;
+                groupOption.textContent = '── Suplentes ──';
+                groupOption.className = 'player-group-option';
+                select.appendChild(groupOption);
+                substitutes.forEach(player => {
+                    const name = player.querySelector('.name').textContent;
+                    const number = playerNumbers[name];
+                    const playerData = rosterData.find(p => formatDisplayName(p.name) === name);
+                    if (playerData) {
+                        select.innerHTML += `<option value="${number}">${number} - ${name} (${playerData.position})</option>`;
+                    }
+                });
+            }
+            ['GK', 'DF', 'DM', 'MF', 'AM', 'FW'].forEach(pos => {
+                select.innerHTML += `<option value="${pos}">${pos}</option>`;
+            });
+        });
+
+        document.getElementById('sub-off').addEventListener('change', function() {
+            const offValue = this.value;
+            const onSelect = document.getElementById('sub-on');
+            
+            for (let i = 0; i < onSelect.options.length; i++) {
+                onSelect.options[i].style.display = '';
+            }
+            
+            if (offValue) {
+                for (let i = 0; i < onSelect.options.length; i++) {
+                    if (onSelect.options[i].value === offValue) {
+                        onSelect.options[i].style.display = 'none';
+                    }
+                }
+            }
+        });
+
+        document.getElementById('tactic-add').addEventListener('click', () => addConditional('tactic'));
+        document.getElementById('sub-add').addEventListener('click', () => addConditional('substitution'));
+        document.getElementById('reposition-add').addEventListener('click', () => addConditional('reposition'));
+        document.getElementById('aggression-add').addEventListener('click', () => addConditional('aggression'));
+
+        document.getElementById('tactic-clear').addEventListener('click', () => resetTab('tactic'));
+        document.getElementById('sub-clear').addEventListener('click', () => resetTab('substitution'));
+        document.getElementById('reposition-clear').addEventListener('click', () => resetTab('reposition'));
+        document.getElementById('aggression-clear').addEventListener('click', () => resetTab('aggression'));
+
+        updateConditionalsDeleteSelect();
+    }
+
+    function addConditional(tab) {
+        let conditional = '';
+        switch (tab) {
+            case 'tactic':
+                const newTactic = document.getElementById('tactic-new').value;
+                if (!newTactic) {
+                    alert('Selecciona una nueva táctica.');
+                    return;
+                }
+                conditional = `TACTIC ${newTactic}`;
+                break;
+            case 'substitution':
+                const off = document.getElementById('sub-off').value;
+                const on = document.getElementById('sub-on').value;
+                const pos = document.getElementById('sub-position').value;
+                if (!off || !on || !pos) {
+                    alert('Completa los campos de sustitución: Se retira, Entra y Posición.');
+                    return;
+                }
+                conditional = `SUB ${off} ${on} ${pos}`;
+                break;
+            case 'reposition':
+                const player = document.getElementById('reposition-player').value;
+                const newPos = document.getElementById('reposition-position').value;
+                if (!player || !newPos) {
+                    alert('Selecciona un jugador y una nueva posición.');
+                    return;
+                }
+                conditional = `CHANGEPOS ${player} ${newPos}`;
+                break;
+            case 'aggression':
+                const newAgg = document.getElementById('aggression-new').value;
+                if (!newAgg) {
+                    alert('Selecciona una nueva agresividad.');
+                    return;
+                }
+                conditional = `CHANGEAGG ${newAgg}`;
+                break;
+        }
+
+        let conditions = [];
+        
+        const prefix = tab === 'substitution' ? 'sub' : tab;
+        
+        const ifMin = document.getElementById(prefix + '-if-min').value;
+        let minVal;
+        const minVal1 = document.getElementById(prefix + '-min-value1').value;
+        const minVal2 = document.getElementById(prefix + '-min-value2').value;
+        const minVal3 = document.getElementById(prefix + '-min-value3').value;
+        minVal = minVal1 || minVal2 || minVal3;
+        if (ifMin && minVal) conditions.push(`MIN ${ifMin} ${minVal}`);
+
+        const ifScore = document.getElementById(prefix + '-if-score').value;
+        const scoreVal = document.getElementById(prefix + '-score-value').value;
+        if (ifScore && scoreVal) {
+            conditions.push(`SCORE ${ifScore} ${scoreVal}`);
+        }
+
+        const ifShots = document.getElementById(prefix + '-if-shots').value;
+        const shotsVal = document.getElementById(prefix + '-shots-value').value;
+        if (ifShots && shotsVal) conditions.push(`SHOTS ${ifShots} ${shotsVal}`);
+
+        const ifYellow = document.getElementById(prefix + '-if-yellow').value;
+        if (ifYellow) conditions.push(`YELLOW ${ifYellow}`);
+        const ifRed = document.getElementById(prefix + '-if-red').value;
+        if (ifRed) conditions.push(`RED ${ifRed}`);
+        const ifInjured = document.getElementById(prefix + '-if-injured').value;
+        if (ifInjured) conditions.push(`INJURED ${ifInjured}`);
+
+        if (conditions.length > 0) {
+            conditional += ` IF ${conditions.join(' ')}`;
+        }
+
+        // Convertir a mayúsculas antes de validar
+        conditional = conditional.toUpperCase();
+
+        if (!validateConditional(conditional)) {
+            alert('El condicional no es válido o está incompleto.');
+            return;
+        }
+
+        customConditionals.push(conditional);
+        updateTranscription();
+        updateCurrentConditionals();
+        updateConditionalsDeleteSelect();
+        resetTab(tab);
+    }
+
+    function resetTab(tab) {
+        const content = document.getElementById(tab + '-tab');
+        content.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    }
+
+    function updateCurrentConditionals() {
+        const list = document.getElementById('conditionals-list');
+        list.innerHTML = '';
+        customConditionals.forEach(cond => {
+            const li = document.createElement('li');
+            li.textContent = cond;
+            list.appendChild(li);
+        });
+        list.style.display = 'block';
+    }
+
+    function toggleConditionalsList() {
+        const list = document.getElementById('conditionals-list');
+        const icon = document.querySelector('#current-conditionals h4 i');
+        if (list.style.display === 'none') {
+            list.style.display = 'block';
+            icon.className = 'fas fa-chevron-up';
+        } else {
+            list.style.display = 'none';
+            icon.className = 'fas fa-chevron-down';
+        }
+    }
+
+    function updateConditionalsDeleteSelect() {
+        const select = document.getElementById('conditionalToDelete');
+        select.innerHTML = '<option value="" disabled selected>Seleccionar condicional</option>';
+        select.innerHTML += '<option value="all">Todos los condicionales</option>';
+        customConditionals.forEach((conditional, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = conditional;
+            select.appendChild(option);
+        });
+    }
+
+    function deleteConditional() {
+        const select = document.getElementById('conditionalToDelete');
+        const value = select.value;
+        
+        if (value === "all") {
+            customConditionals = [];
+        } else {
+            const index = parseInt(value);
+            if (isNaN(index) || index < 0 || index >= customConditionals.length) {
+                alert('Por favor, selecciona un condicional para eliminar.');
+                return;
+            }
+            customConditionals.splice(index, 1);
+        }
+        
+        updateTranscription();
+        updateCurrentConditionals();
+        updateConditionalsDeleteSelect();
+        
+        select.selectedIndex = 0;
+    }
+
+    // NUEVA FUNCIÓN DE VALIDACIÓN BASADA EN LA PÁGINA DE REFERENCIA
+    function validateConditional(conditional) {
+        conditional = conditional.trim();
+        if (!conditional) return false;
+
+        // Validar que no haya minúsculas
+        if (/[a-z]/.test(conditional)) {
+            return false;
+        }
+
+        // Validar que haya exactamente un "IF"
+        const ifCount = (conditional.match(/IF/g) || []).length;
+        if (ifCount !== 1) {
+            return false;
+        }
+
+        // Patrones de condiciones (los mismos que en la página de referencia)
+        const conditionPattern = `(?:(?:MIN\\s*(?:=|>=|<=)\\s+(?:[1-9]\\d?|1[01]\\d|120))|(?:SCORE\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:SHOTS\\s+(?:=|>=|<=)\\s+[+-]?\\d+)|(?:INJURED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:YELLOW\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6]))|(?:RED\\s+(?:GK|DF|DM|MF|AM|FW|[1-9]|1[0-6])))`;
+
+        // Expresiones regulares para cada tipo de condicional
+        const tacticRegex = new RegExp(`^TACTIC\\s+[ACELNPDT]\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+        const subRegex = new RegExp(`^SUB\\s+([1-9]|1[0-6])\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+        const subNewRegex = new RegExp(`^SUB\\s+(GK|DF|DM|MF|AM|FW)\\s+(1[2-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+(INJURED|YELLOW|RED)\\s+(GK|DF|DM|MF|AM|FW)$`);
+        const changePosRegex = new RegExp(`^CHANGEPOS\\s+([1-9]|1[0-6])\\s+(GK|DF|DM|MF|AM|FW)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+        const changeAggRegex = new RegExp(`^CHANGEAGG\\s+([1-9]\\d|20)\\s+IF\\s+${conditionPattern}(\\s+${conditionPattern})*$`);
+
+        // Validar según el tipo
+        if (tacticRegex.test(conditional)) {
+            return true;
+        } else if (subRegex.test(conditional)) {
+            // Validaciones adicionales para el formato antiguo de SUB
+            const parts = conditional.split(/\s+/);
+            const outNum = parseInt(parts[1]);
+            const inNum = parseInt(parts[2]);
+            const pos = parts[3];
+
+            // El jugador saliente debe ser 1-16
+            if (outNum < 1 || outNum > 16) return false;
+            // El jugador entrante debe ser suplente (12-16)
+            if (inNum < 12 || inNum > 16) return false;
+            if (outNum === inNum) return false;
+
+            return true;
+        } else if (subNewRegex.test(conditional)) {
+            // Validaciones adicionales para el nuevo formato de SUB
+            const parts = conditional.split(/\s+/);
+            const posOut = parts[1];
+            const inNum = parseInt(parts[2]);
+            const posIn = parts[3];
+            const condType = parts[5];
+            const posCond = parts[6];
+
+            // La posición de salida y la posición de la condición deben coincidir
+            if (posOut !== posCond) return false;
+
+            // El número entrante debe estar entre 12 y 16
+            if (inNum < 12 || inNum > 16) return false;
+
+            // Para GK: si la posición de salida es GK, entonces la posición entrante debe ser GK
+            if (posOut === 'GK' && posIn !== 'GK') return false;
+
+            return true;
+        } else if (changePosRegex.test(conditional)) {
+            // Validaciones adicionales para CHANGEPOS
+            const parts = conditional.split(/\s+/);
+            const num = parseInt(parts[1]);
+            const pos = parts[2];
+
+            // El jugador debe ser titular (2-11) porque el portero (1) no puede cambiar de posición
+            if (num < 2 || num > 11) return false;
+
+            return true;
+        } else if (changeAggRegex.test(conditional)) {
+            // Validaciones adicionales para CHANGEAGG
+            const parts = conditional.split(/\s+/);
+            const agg = parseInt(parts[1]);
+
+            // La agresividad debe estar entre 1 y 20
+            if (agg < 1 || agg > 20) return false;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    function getMissingRequirements() {
+        const missing = [];
+        const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
+        const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute').length;
+
+        if (playersOnField !== 11 || substitutes !== 5) {
+            missing.push("- 11 jugadores titulares y 5 suplentes en el banquillo");
+        }
+        if (abbreviationInput.value.length !== 3) {
+            missing.push("- Una abreviatura de 3 letras especificada");
+        }
+        if (prefixBtn.dataset.value === '') {
+            missing.push("- Una táctica seleccionada");
+        }
+        if (!penaltyKicker) {
+            missing.push("- Un lanzador de penaltis designado");
+        }
+
+        return missing;
+    }
+
+    processRoster();
+
+    const tabContainer = document.getElementById('tab-container');
+    const tabToggle = document.getElementById('tab-toggle');
+
+    tabToggle.addEventListener('click', () => {
+        tabContainer.classList.toggle('expanded');
+    });
+    
+    // Añadir elemento de audio
+    const clickSound = new Audio('https://www.tusoccermanager.com/download?id=850');
+    
+    // Controlador de eventos para todos los clics en botones
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('button, [role="button"]')) {
+            clickSound.play().catch(() => {});
+        }
+    });
+</script>
+</body>
+</html>
