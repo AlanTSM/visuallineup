@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Creador dinámico de alineaciones</title><style>::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#4a5e88;border-radius:4px}::-webkit-scrollbar-thumb{background:#0c6;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#0a5}body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1e2a44 0,#2d4066 100%);margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;color:#fff}h2{font-size:16px;color:#d9d9d9;margin-bottom:10px;text-transform:uppercase;display:flex;align-items:center;gap:5px}#main-container{display:flex;justify-content:space-between;width:100%;max-width:1200px;gap:20px}#block1,#block2,#block3{flex:1;display:flex;flex-direction:column;align-items:center}#block1-container,#transcription-container{background:rgba(255,255,255,.05);padding:15px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);width:90%;margin-top:20px;transition:height .3s ease;overflow:hidden}#block1-container.collapsed{height:0;padding:0;margin-top:0}#block1-title.collapsed{display:none}#abbreviation-input,#roster-input,#transcription-output{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;position:relative}#abbreviation-input{background:#e6e6e6;color:#333}#roster-input{height:50px;resize:none}#roster-input::placeholder{color:rgba(255,255,255,.4);font-style:italic}#transcription-output{height:350px;font-family:monospace;resize:none}#abbreviation-input{height:20px;margin-bottom:10px;width:60px;display:inline-block}#prefix-dropdown{width:120px;height:30px;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-left:10px;vertical-align:top;position:relative}#prefix-btn{background-color:#2d4066;color:#fff;padding:5px;border:none;cursor:pointer;width:100%}#prefix-content{display:none;position:absolute;background-color:#2d4066;min-width:160px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1}#prefix-content a{color:#fff;padding:12px 16px;text-decoration:none;display:block}#prefix-content a:hover{background-color:#4a5e88}#prefix-dropdown.active #prefix-content{display:block}#aggressiveness-slider{width:100px;margin-left:10px;vertical-align:top;position:relative}#aggressiveness-title{font-size:10px;color:#d9d9d9;text-align:center;margin-bottom:-2px}#button-container{display:flex;gap:10px;margin-top:10px;justify-content:center}.action-button{padding:6px 12px;font-size:12px;background-color:#fc0;color:#1e2a44;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s}.action-button:hover{background-color:#e6b800;transform:scale(1.05)}#field-container{position:relative;width:100%;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3)}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none}#substitutes-container{display:flex;justify-content:center;gap:20px;padding:10px 0}.substitute-slot{width:40px;height:40px;border:2px dashed #4a5e88;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);position:relative;transition:border-color .3s;cursor:pointer}.substitute-slot:hover{border-color:#fc0}.substitute-slot .number{font-size:14px;font-weight:700;color:#d9d9d9;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute{width:40px;height:40px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;background:linear-gradient(145deg,#66c,#44a);border:1px solid rgba(255,255,255,.2);left:0;top:0}.player-button.on-substitute .name{position:absolute;top:42px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-substitute .number{font-size:14px;font-weight:700;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute .position-fit,.player-button.on-substitute .stats{display:none}#players-container{width:100%;max-height:400px;overflow-y:auto;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}#buttons-container{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}#clear-conditionals-btn,#create-conditionals-btn,#import-conditionals-btn,#select-penalty-btn,#select-substitutes-btn{padding:6px 12px;font-size:12px;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;position:relative}#suggested-conditionals-btn{padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s}#suggested-conditionals-btn:hover{background-color:#55b;transform:scale(1.05)}#select-substitutes-btn{background-color:#66c}#select-penalty-btn{background-color:#396}#create-conditionals-btn{background-color:#c63}#clear-conditionals-btn,#import-conditionals-btn{background-color:#66c}#clear-conditionals-btn:hover,#import-conditionals-btn:hover,#select-substitutes-btn:hover{background-color:#55b;transform:scale(1.05)}#select-penalty-btn:hover{background-color:#2d8659;transform:scale(1.05)}#create-conditionals-btn:hover{background-color:#b3592d;transform:scale(1.05)}#select-penalty-btn.active,#select-substitutes-btn.active{background-color:#e63946}#import-conditionals-btn.active{background-color:#e63946}#select-penalty-btn .tooltip,#select-substitutes-btn .tooltip{visibility:hidden;width:120px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-40px;left:50%;margin-left:-60px;font-size:10px;opacity:0;transition:opacity .2s}#select-penalty-btn:hover .tooltip,#select-substitutes-btn:hover .tooltip{visibility:visible;opacity:1}#filter-container{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}#filter-container label{font-size:12px;color:#d9d9d9;display:flex;align-items:center;gap:4px}#filter-container input[name=position]{appearance:none;width:12px;height:12px;background-color:#2d4066;border:1px solid #4a5e88;border-radius:50%}#filter-container input[name=position]:checked{background-color:#fc0}.player-button{padding:8px;background-color:#3b5998;color:#fff;border:none;border-radius:4px;cursor:grab;user-select:none;position:relative;transition:transform .2s,box-shadow .2s;box-shadow:0 2px 5px rgba(0,0,0,.2);font-size:11px;width:85px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2}.player-button.unavailable{background-color:#e63946;cursor:not-allowed;position:relative}.player-button:hover:not(.unavailable){transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,.3)}.player-button.dragging{opacity:.7;transform:scale(1.1);cursor:grabbing}.player-button.dragging.on-field-transform{width:30px;height:30px;border-radius:50%;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.4);transition:all .3s ease}.player-button.dragging.on-field-transform .position-fit,.player-button.dragging.on-field-transform .stats{display:none}.player-button .name{font-size:12px;font-weight:700;margin-bottom:4px}.player-button .position-fit{font-size:10px;opacity:.9;margin-bottom:4px}.player-button .stats{font-size:9px;width:100%}.player-button .stats span{margin:0 2px}.stat-st{color:#f99}.stat-tk{color:#9f9}.stat-ps{color:#99f}.stat-sh{color:#ff9}.player-button.on-field{width:30px;height:30px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;margin-left:5px;transition:all .3s ease;border:1px solid rgba(255,255,255,.2)}.player-button.on-field.section-6{background:linear-gradient(145deg,#ff9,#e6e600)}.player-button.on-field.section-5{background:linear-gradient(145deg,#77d,#55b)}.player-button.on-field.section-4{background:linear-gradient(145deg,#99f,#77d)}.player-button.on-field.section-3{background:linear-gradient(145deg,#bbf,#99d)}.player-button.on-field.section-2{background:linear-gradient(145deg,#9f9,#7d7)}.player-button.on-field.section-1{background:linear-gradient(145deg,#f99,#d77)}.player-button.on-field .name{position:absolute;top:32px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-field .position-fit,.player-button.on-field .stats{display:none}.player-button .star{position:absolute;top:2px;right:2px;font-size:12px;color:#fc0}.player-button.on-field .player-tooltip,.player-button.on-substitute .player-tooltip{visibility:hidden;width:90px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-80px;left:50%;margin-left:-45px;font-size:10px;opacity:0;transition:opacity .2s}.player-button.on-field:hover .player-tooltip,.player-button.on-substitute:hover .player-tooltip{visibility:visible;opacity:1}.remove-btn{background:#e63946;color:#fff;border:none;border-radius:50%;width:10px;height:10px;line-height:10px;font-size:8px;cursor:pointer;position:absolute;top:10px;right:-12px;padding:0}.remove-btn:hover{background:#d00000}#clear-field-btn{position:absolute;top:10px;right:10px;padding:6px 12px;font-size:12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s}#clear-field-btn:hover{background-color:#d00000}#info-icon{width:24px;height:24px;cursor:pointer;margin-right:5px;position:relative}#info-icon img{width:100%;height:100%}#info-icon .tooltip{visibility:hidden;width:200px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-60px;left:50%;margin-left:-100px;font-size:10px;opacity:0;transition:opacity .2s}#info-icon:hover .tooltip{visibility:visible;opacity:1}#formation-display{display:none;position:absolute;bottom:30px;right:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}#average-age-display{display:none;position:absolute;bottom:30px;left:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}.tooltip{visibility:hidden;width:120px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:100%;left:50%;margin-left:-60px;margin-top:2px;font-size:10px;opacity:0}.player-button.unavailable:hover .tooltip{visibility:visible;opacity:1}#aggressiveness-slider:hover .tooltip{visibility:visible;opacity:1;transition:opacity 0s}#aggressiveness-slider:not(:hover) .tooltip{transition:opacity .2s 2s}#toggle-block1-btn{position:absolute;top:10px;right:10px;padding:5px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px}#toggle-block1-btn:hover{background-color:#55b}#transcription-actions{display:flex;justify-content:center;gap:15px;margin-top:10px}.action-icon-container{position:relative;cursor:pointer}.action-icon{width:24px;height:24px;display:block;transition:transform .2s}.action-icon-container.clicked .action-icon{animation:clickAnimation .3s ease}.action-icon-container .tooltip{width:120px;top:-40px;left:50%;margin-left:-60px}.action-icon-container:hover .tooltip{visibility:visible;opacity:1}.tick{position:absolute;top:0;left:0;width:24px;height:24px;background:rgba(0,255,0,.8);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;border-radius:50%;opacity:0;transition:opacity .3s}.tick.show{opacity:1}#progress-container{width:90%;margin:10px 0}#progress-bar{width:100%;height:10px;background:#4a5e88;border-radius:5px;position:relative;overflow:hidden}#progress-fill{height:100%;background:#0c6;width:0;transition:width .3s ease}.checkpoint{position:absolute;top:-2px;width:2px;height:14px;background:#fff;opacity:.7}@keyframes clickAnimation{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;max-height:80vh;overflow-y:auto;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #4a5e88;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,.05);transition:background .2s}#conditionals-popup .tab.active{background:rgba(255,255,255,.15)}#conditionals-popup .tab:hover{background:rgba(255,255,255,.1)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:5px}#conditionals-popup label{font-size:12px;color:#d9d9d9}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}#current-conditionals{margin-top:15px}#current-conditionals h4{cursor:pointer;display:flex;align-items:center;gap:5px}#conditionals-list{display:none;list-style:none;padding:0;margin:10px 0;max-height:200px;overflow-y:auto}#conditionals-list li{background:rgba(255,255,255,.05);padding:5px;margin-bottom:5px;border-radius:4px}.close-btn{position:absolute;top:10px;right:10px;width:20px;height:20px;background-color:#e63946;color:#fff;border:none;border-radius:50%;font-size:14px;line-height:20px;cursor:pointer;transition:background-color .2s}.close-btn:hover{background-color:#d00000}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-button.on-field.swapping{transform:scale(1.1);transition:all .3s ease}#tab-container{position:fixed;bottom:0;right:0;width:200px;background:rgba(255,255,255,.05);border-top-left-radius:8px;box-shadow:0 -2px 10px rgba(0,0,0,.3);z-index:1000;transition:height .3s ease;height:30px;overflow:hidden}#tab-toggle{background:#66c;color:#fff;text-align:center;padding:5px;cursor:pointer;border-top-left-radius:8px;font-size:14px}#tab-content{padding:10px;display:flex;flex-direction:column;gap:10px}#tab-content a{color:#fc0;text-decoration:none;font-size:12px;transition:color .2s}#tab-content a:hover{color:#e6b800}#tab-container.expanded{height:200px}.flag{width:16px;height:12px;margin-right:4px;vertical-align:middle}#dropbox-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#dropbox-popup h2{text-align:center}#dropbox-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:10px}#loading-dropbox{display:none;text-align:center;margin-top:10px;font-size:14px}#dropbox-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-group-option{font-weight:700;color:#d9d9d9;text-align:center}#delete-conditional-btn{margin-top:10px;padding:6px 12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer}#delete-conditional-btn:hover{background-color:#d00000}#team-badge-container{display:flex;align-items:center;margin-bottom:10px;gap:10px}#team-badge{width:48px;height:48px;object-fit:contain}#transcription-controls{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}.glow-yellow{box-shadow:0 0 10px 3px rgba(255,204,0,.7);transition:box-shadow .3s ease}.glow-red{box-shadow:0 0 10px 3px rgba(255,0,0,.7);transition:box-shadow .3s ease}#view-roster-link{margin-top:10px;padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;text-decoration:none}#view-roster-link:hover{background-color:#55b;transform:scale(1.05)}#roster-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:1400px;max-height:80vh;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;overflow:auto}#roster-popup table{width:100%;border-collapse:collapse;font-size:12px}#roster-popup td,#roster-popup th{padding:8px;border:1px solid #4a5e88;text-align:left}#roster-popup th{background:#2d4066;position:sticky;top:0;z-index:2}#roster-popup td:first-child{background:#2d4066;position:sticky;left:0;z-index:1}#roster-popup th:first-child{z-index:3}#roster-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-button.on-field.selected-glow{box-shadow:0 0 12px 4px rgba(255,255,0,.9)}#reset-link{text-decoration:none;color:#aaa;font-size:10px;margin-left:10px;cursor:pointer;transition:color .2s}#reset-link:hover{color:#fc0}@media (max-width:768px){#main-container{flex-direction:column}#block1,#block2,#block3{width:100%}#players-container{grid-template-columns:1fr 1fr}#filter-container{flex-direction:column;align-items:flex-start}#button-container,#buttons-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:60%;margin-right:10px}#players-container-wrapper{width:40%;display:flex;flex-direction:column}#players-container{max-height:300px}}@media (max-aspect-ratio:1/1) and (max-width:768px){#main-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:50%;margin-right:10px}#players-container-wrapper{width:50%;display:flex;flex-direction:column}#players-container{max-height:250px;grid-template-columns:1fr 1fr}}</style>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width,initial-scale=1" /><title>Creador dinámico de alineaciones</title><style>::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:#4a5e88;border-radius:4px}::-webkit-scrollbar-thumb{background:#0c6;border-radius:4px}::-webkit-scrollbar-thumb:hover{background:#0a5}body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#1e2a44 0,#2d4066 100%);margin:0;padding:20px;display:flex;flex-direction:column;align-items:center;color:#fff}h2{font-size:16px;color:#d9d9d9;margin-bottom:10px;text-transform:uppercase;display:flex;align-items:center;gap:5px}#main-container{display:flex;justify-content:space-between;width:100%;max-width:1200px;gap:20px}#block1,#block2,#block3{flex:1;display:flex;flex-direction:column;align-items:center}#block1-container,#transcription-container{background:rgba(255,255,255,.05);padding:15px;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);width:90%;margin-top:20px;transition:height .3s ease;overflow:hidden}#block1-container.collapsed{height:0;padding:0;margin-top:0}#block1-title.collapsed{display:none}#abbreviation-input,#roster-input,#transcription-output{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;position:relative}#abbreviation-input{background:#e6e6e6;color:#333}#roster-input{height:50px;resize:none}#roster-input::placeholder{color:rgba(255,255,255,.4);font-style:italic}#transcription-output{height:350px;font-family:monospace;resize:none}#abbreviation-input{height:20px;margin-bottom:10px;width:60px;display:inline-block}#prefix-dropdown{width:120px;height:30px;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-left:10px;vertical-align:top;position:relative}#prefix-btn{background-color:#2d4066;color:#fff;padding:5px;border:none;cursor:pointer;width:100%}#prefix-content{display:none;position:absolute;background-color:#2d4066;min-width:160px;box-shadow:0 8px 16px 0 rgba(0,0,0,.2);z-index:1}#prefix-content a{color:#fff;padding:12px 16px;text-decoration:none;display:block}#prefix-content a:hover{background-color:#4a5e88}#prefix-dropdown.active #prefix-content{display:block}#aggressiveness-slider{width:100px;margin-left:10px;vertical-align:top;position:relative}#aggressiveness-title{font-size:10px;color:#d9d9d9;text-align:center;margin-bottom:-2px}#button-container{display:flex;gap:10px;margin-top:10px;justify-content:center}.action-button{padding:6px 12px;font-size:12px;background-color:#fc0;color:#1e2a44;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s}.action-button:hover{background-color:#e6b800;transform:scale(1.05)}#field-container{position:relative;width:100%;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);transition:transform 0.2s ease, transform-origin 0.2s ease;transform-origin: top left;}#substitutes-container{display:flex;justify-content:center;gap:20px;padding:10px 0;transition:transform 0.2s ease, transform-origin 0.2s ease;transform-origin: top left;}.field-zoomed{transform: scale(0.8);}.field-section{width:100%;display:block;margin:0;padding:0;user-drag:none;-webkit-user-drag:none;pointer-events:none;user-select:none}.substitute-slot{width:40px;height:40px;border:2px dashed #4a5e88;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);position:relative;transition:border-color .3s;cursor:pointer}.substitute-slot:hover{border-color:#fc0}.substitute-slot .number{font-size:14px;font-weight:700;color:#d9d9d9;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute{width:40px;height:40px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;background:linear-gradient(145deg,#66c,#44a);border:1px solid rgba(255,255,255,.2);left:0;top:0}.player-button.on-substitute .name{position:absolute;top:42px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-substitute .number{font-size:14px;font-weight:700;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.5)}.player-button.on-substitute .position-fit,.player-button.on-substitute .stats{display:none}#players-container{width:100%;max-height:400px;overflow-y:auto;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}#buttons-container{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;justify-content:center}#clear-conditionals-btn,#create-conditionals-btn,#import-conditionals-btn,#select-penalty-btn,#select-substitutes-btn{padding:6px 12px;font-size:12px;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;position:relative}#suggested-conditionals-btn{padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s}#suggested-conditionals-btn:hover{background-color:#55b;transform:scale(1.05)}#select-substitutes-btn{background-color:#66c}#select-penalty-btn{background-color:#396}#create-conditionals-btn{background-color:#c63}#clear-conditionals-btn,#import-conditionals-btn{background-color:#66c}#clear-conditionals-btn:hover,#import-conditionals-btn:hover,#select-substitutes-btn:hover{background-color:#55b;transform:scale(1.05)}#select-penalty-btn:hover{background-color:#2d8659;transform:scale(1.05)}#create-conditionals-btn:hover{background-color:#b3592d;transform:scale(1.05)}#select-penalty-btn.active,#select-substitutes-btn.active{background-color:#e63946}#import-conditionals-btn.active{background-color:#e63946}#select-penalty-btn .tooltip,#select-substitutes-btn .tooltip{visibility:hidden;width:120px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-40px;left:50%;margin-left:-60px;font-size:10px;opacity:0;transition:opacity .2s}#select-penalty-btn:hover .tooltip,#select-substitutes-btn:hover .tooltip{visibility:visible;opacity:1}#filter-container{display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap;align-items:center}#filter-container label{font-size:12px;color:#d9d9d9;display:flex;align-items:center;gap:4px}#filter-container input[name=position]{appearance:none;width:12px;height:12px;background-color:#2d4066;border:1px solid #4a5e88;border-radius:50%}#filter-container input[name=position]:checked{background-color:#fc0}.player-button{padding:8px;background-color:#3b5998;color:#fff;border:none;border-radius:4px;cursor:grab;user-select:none;position:relative;transition:transform .2s,box-shadow .2s;box-shadow:0 2px 5px rgba(0,0,0,.2);font-size:11px;width:85px;height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.2}.player-button.unavailable{background-color:#e63946;cursor:not-allowed;position:relative}.player-button:hover:not(.unavailable){transform:scale(1.05);box-shadow:0 4px 10px rgba(0,0,0,.3)}.player-button.dragging{opacity:.7;transform:scale(1.1);cursor:grabbing}.player-button.dragging.on-field-transform{width:30px;height:30px;border-radius:50%;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.4);transition:all .3s ease}.player-button.dragging.on-field-transform .position-fit,.player-button.dragging.on-field-transform .stats{display:none}.player-button .name{font-size:12px;font-weight:700;margin-bottom:4px}.player-button .position-fit{font-size:10px;opacity:.9;margin-bottom:4px}.player-button .stats{font-size:9px;width:100%}.player-button .stats span{margin:0 2px}.stat-st{color:#f99}.stat-tk{color:#9f9}.stat-ps{color:#99f}.stat-sh{color:#ff9}.player-button.on-field{width:30px;height:30px;border-radius:50%;padding:0;display:flex;align-items:center;justify-content:center;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.4);cursor:grab;position:absolute;margin-left:5px;transition:all .3s ease;border:1px solid rgba(255,255,255,.2)}.player-button.on-field.section-6{background:linear-gradient(145deg,#ff9,#e6e600)}.player-button.on-field.section-5{background:linear-gradient(145deg,#77d,#55b)}.player-button.on-field.section-4{background:linear-gradient(145deg,#99f,#77d)}.player-button.on-field.section-3{background:linear-gradient(145deg,#bbf,#99d)}.player-button.on-field.section-2{background:linear-gradient(145deg,#9f9,#7d7)}.player-button.on-field.section-1{background:linear-gradient(145deg,#f99,#d77)}.player-button.on-field .name{position:absolute;top:32px;font-size:12px;font-weight:400;color:#fff;text-shadow:1px 1px 2px rgba(0,0,0,.8),-1px -1px 2px rgba(0,0,0,.8)}.player-button.on-field .position-fit,.player-button.on-field .stats{display:none}.player-button .star{position:absolute;top:2px;right:2px;font-size:12px;color:#fc0}.player-button.on-field .player-tooltip,.player-button.on-substitute .player-tooltip{visibility:hidden;width:90px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-80px;left:50%;margin-left:-45px;font-size:10px;opacity:0;transition:opacity .2s}.player-button.on-field:hover .player-tooltip,.player-button.on-substitute:hover .player-tooltip{visibility:visible;opacity:1}.remove-btn{background:#e63946;color:#fff;border:none;border-radius:50%;width:10px;height:10px;line-height:10px;font-size:8px;cursor:pointer;position:absolute;top:10px;right:-12px;padding:0}.remove-btn:hover{background:#d00000}#clear-field-btn{position:absolute;top:10px;right:10px;padding:6px 12px;font-size:12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s}#clear-field-btn:hover{background-color:#d00000}#info-icon{width:24px;height:24px;cursor:pointer;margin-right:5px;position:relative}#info-icon img{width:100%;height:100%}#info-icon .tooltip{visibility:hidden;width:200px;background-color:rgba(0,0,0,.9);color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:-60px;left:50%;margin-left:-100px;font-size:10px;opacity:0;transition:opacity .2s}#info-icon:hover .tooltip{visibility:visible;opacity:1}#formation-display{display:none;position:absolute;bottom:30px;right:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}#average-age-display{display:none;position:absolute;bottom:30px;left:10px;background:rgba(0,0,0,.5);color:#fff;padding:4px 8px;border-radius:4px;font-size:10px;font-weight:700}.tooltip{visibility:hidden;width:120px;background-color:#333;color:#fff;text-align:center;border-radius:4px;padding:5px;position:absolute;z-index:1;top:100%;left:50%;margin-left:-60px;margin-top:2px;font-size:10px;opacity:0}.player-button.unavailable:hover .tooltip{visibility:visible;opacity:1}#aggressiveness-slider:hover .tooltip{visibility:visible;opacity:1;transition:opacity 0s}#aggressiveness-slider:not(:hover) .tooltip{transition:opacity .2s 2s}#toggle-block1-btn{position:absolute;top:10px;right:10px;padding:5px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;font-size:12px}#toggle-block1-btn:hover{background-color:#55b}#transcription-actions{display:flex;justify-content:center;gap:15px;margin-top:10px}.action-icon-container{position:relative;cursor:pointer}.action-icon{width:24px;height:24px;display:block;transition:transform .2s}.action-icon-container.clicked .action-icon{animation:clickAnimation .3s ease}.action-icon-container .tooltip{width:120px;top:-40px;left:50%;margin-left:-60px}.action-icon-container:hover .tooltip{visibility:visible;opacity:1}.tick{position:absolute;top:0;left:0;width:24px;height:24px;background:rgba(0,255,0,.8);color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;border-radius:50%;opacity:0;transition:opacity .3s}.tick.show{opacity:1}#progress-container{width:90%;margin:10px 0}#progress-bar{width:100%;height:10px;background:#4a5e88;border-radius:5px;position:relative;overflow:hidden}#progress-fill{height:100%;background:#0c6;width:0;transition:width .3s ease}.checkpoint{position:absolute;top:-2px;width:2px;height:14px;background:#fff;opacity:.7}@keyframes clickAnimation{0%{transform:scale(1)}50%{transform:scale(1.2)}100%{transform:scale(1)}}#conditionals-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;max-height:80vh;overflow-y:auto;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#conditionals-popup .tabs{display:flex;border-bottom:1px solid #4a5e88;margin-bottom:15px}#conditionals-popup .tab{flex:1;padding:10px;text-align:center;cursor:pointer;background:rgba(255,255,255,.05);transition:background .2s}#conditionals-popup .tab.active{background:rgba(255,255,255,.15)}#conditionals-popup .tab:hover{background:rgba(255,255,255,.1)}#conditionals-popup .tab-content{display:none}#conditionals-popup .tab-content.active{display:block}#conditionals-popup input,#conditionals-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:5px}#conditionals-popup label{font-size:12px;color:#d9d9d9}#conditionals-popup .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}#conditionals-popup .buttons{display:flex;gap:10px;margin-top:15px;justify-content:center}#current-conditionals{margin-top:15px}#current-conditionals h4{cursor:pointer;display:flex;align-items:center;gap:5px}#conditionals-list{display:none;list-style:none;padding:0;margin:10px 0;max-height:200px;overflow-y:auto}#conditionals-list li{background:rgba(255,255,255,.05);padding:5px;margin-bottom:5px;border-radius:4px}.close-btn{position:absolute;top:10px;right:10px;width:20px;height:20px;background-color:#e63946;color:#fff;border:none;border-radius:50%;font-size:14px;line-height:20px;cursor:pointer;transition:background-color .2s}.close-btn:hover{background-color:#d00000}#conditionals-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-button.on-field.swapping{transform:scale(1.1);transition:all .3s ease}#tab-container{position:fixed;bottom:0;right:0;width:200px;background:rgba(255,255,255,.05);border-top-left-radius:8px;box-shadow:0 -2px 10px rgba(0,0,0,.3);z-index:1000;transition:height .3s ease;height:30px;overflow:hidden}#tab-toggle{background:#66c;color:#fff;text-align:center;padding:5px;cursor:pointer;border-top-left-radius:8px;font-size:14px}#tab-content{padding:10px;display:flex;flex-direction:column;gap:10px}#tab-content a{color:#fc0;text-decoration:none;font-size:12px;transition:color .2s}#tab-content a:hover{color:#e6b800}#tab-container.expanded{height:200px}.flag{width:16px;height:12px;margin-right:4px;vertical-align:middle}#dropbox-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff}#dropbox-popup h2{text-align:center}#dropbox-popup select{width:100%;padding:5px;font-size:12px;border:1px solid #4a5e88;border-radius:5px;background:#2d4066;color:#fff;margin-top:10px}#loading-dropbox{display:none;text-align:center;margin-top:10px;font-size:14px}#dropbox-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-group-option{font-weight:700;color:#d9d9d9;text-align:center}#delete-conditional-btn{margin-top:10px;padding:6px 12px;background-color:#e63946;color:#fff;border:none;border-radius:4px;cursor:pointer}#delete-conditional-btn:hover{background-color:#d00000}#team-badge-container{display:flex;align-items:center;margin-bottom:10px;gap:10px}#team-badge{width:48px;height:48px;object-fit:contain}#transcription-controls{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}.glow-yellow{box-shadow:0 0 10px 3px rgba(255,204,0,.7);transition:box-shadow .3s ease}.glow-red{box-shadow:0 0 10px 3px rgba(255,0,0,.7);transition:box-shadow .3s ease}#view-roster-link{margin-top:10px;padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;text-decoration:none;margin-right:10px}#view-roster-link:hover{background-color:#55b;transform:scale(1.05)}#zoom-field-btn{margin-top:10px;padding:6px 12px;font-size:12px;background-color:#66c;color:#fff;border:none;border-radius:4px;cursor:pointer;transition:background-color .2s,transform .1s;text-decoration:none}#zoom-field-btn:hover{background-color:#55b;transform:scale(1.05)}#roster-popup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:95%;max-width:1400px;max-height:80vh;background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,.3);padding:20px;z-index:1000;color:#fff;overflow:auto}#roster-popup table{width:100%;border-collapse:collapse;font-size:12px}#roster-popup td,#roster-popup th{padding:8px;border:1px solid #4a5e88;text-align:left}#roster-popup th{background:#2d4066;position:sticky;top:0;z-index:2}#roster-popup td:first-child{background:#2d4066;position:sticky;left:0;z-index:1}#roster-popup th:first-child{z-index:3}#roster-overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:999}.player-button.on-field.selected-glow{box-shadow:0 0 12px 4px rgba(255,255,0,.9)}#reset-link{text-decoration:none;color:#aaa;font-size:10px;margin-left:10px;cursor:pointer;transition:color .2s}#reset-link:hover{color:#fc0}@media (max-width:768px){#main-container{flex-direction:column}#block1,#block2,#block3{width:100%}#players-container{grid-template-columns:1fr 1fr}#filter-container{flex-direction:column;align-items:flex-start}#button-container,#buttons-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:60%;margin-right:10px}#players-container-wrapper{width:40%;display:flex;flex-direction:column}#players-container{max-height:300px}}@media (max-aspect-ratio:1/1) and (max-width:768px){#main-container{flex-direction:column}#block2,#block3{display:flex;flex-direction:row;width:100%}#field-container{width:50%;margin-right:10px}#players-container-wrapper{width:50%;display:flex;flex-direction:column}#players-container{max-height:250px;grid-template-columns:1fr 1fr}}</style>
 <div id="main-container">
 	    
 	<div id="block1">
@@ -195,7 +195,10 @@
 			            <button id="suggested-conditionals-btn">Condicionales sugeridos</button>
 			            <input style="display: none;" accept=".txt" id="conditionals-input" type="file" />        
 		</div>
-		        <a id="view-roster-link" href="#">Ver plantilla</a>    
+		<div style="display: flex; align-items: center; margin-top: 10px;">
+		        <a id="view-roster-link" href="#">Ver plantilla</a>
+		        <button id="zoom-field-btn">Reducir tamaño campo</button>
+		</div>
 	</div>
 </div>
 <div id="conditionals-overlay">
@@ -621,6 +624,7 @@
     const createConditionalsBtn = document.getElementById('create-conditionals-btn');
     const clearConditionalsBtn = document.getElementById('clear-conditionals-btn');
     const suggestedConditionalsBtn = document.getElementById('suggested-conditionals-btn');
+    const zoomFieldBtn = document.getElementById('zoom-field-btn');
     const conditionalsInput = document.getElementById('conditionals-input');
     const transcriptionOutput = document.getElementById('transcription-output');
     const abbreviationInput = document.getElementById('abbreviation-input');
@@ -660,12 +664,28 @@
     let penaltyKicker = null;
     let conditionalsContent = '';
     let customConditionals = [];
-    let suggestedConditionals = [];      // Array para condicionales sugeridos
+    let suggestedConditionals = [];
     let lineupSaved = false;
     let selectedOnFieldPlayer = null;
     let hoverSound = new Audio('https://www.tusoccermanager.com/download?id=1498');
 
-    // Validación de la alineación completa
+    // Zoom del campo
+    let isFieldZoomed = false;
+    zoomFieldBtn.addEventListener('click', () => {
+        if (isFieldZoomed) {
+            fieldContainer.classList.remove('field-zoomed');
+            substitutesContainer.classList.remove('field-zoomed');
+            zoomFieldBtn.textContent = 'Reducir tamaño campo';
+        } else {
+            fieldContainer.classList.add('field-zoomed');
+            substitutesContainer.classList.add('field-zoomed');
+            zoomFieldBtn.textContent = 'Aumentar tamaño campo';
+        }
+        isFieldZoomed = !isFieldZoomed;
+        updatePlayerNumbers();
+    });
+
+    // Validación de la alineación completa (incluye restricciones de posición por secciones)
     function validarAlineacionCompleta() {
         const errores = [];
         
@@ -715,6 +735,28 @@
                 errores.push(`Condicional ${index + 1} no es válido: ${conditional}`);
             }
         });
+        
+        // Validación de posiciones de los titulares según secciones (sin contar DM como DF)
+        if (playersOnField === 11) {
+            const players = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+            let dfCount = 0;   // solo section-2
+            let mfCount = 0;   // section-4
+            let amCount = 0;   // section-5
+            let fwCount = 0;   // section-6
+            players.forEach(p => {
+                if (p.classList.contains('section-2')) dfCount++;
+                else if (p.classList.contains('section-4')) mfCount++;
+                else if (p.classList.contains('section-5')) amCount++;
+                else if (p.classList.contains('section-6')) fwCount++;
+                // section-3 (DM) no cuenta para ninguna restricción, se ignora
+            });
+            if (dfCount < 2) errores.push(`Mínimo 2 defensas (DF). Actualmente hay ${dfCount}.`);
+            if (dfCount > 6) errores.push(`Máximo 6 defensas (DF). Actualmente hay ${dfCount}.`);
+            if (mfCount < 1) errores.push(`Mínimo 1 centrocampista (MF). Actualmente hay ${mfCount}.`);
+            if (mfCount > 6) errores.push(`Máximo 6 centrocampistas (MF). Actualmente hay ${mfCount}.`);
+            if (amCount > 4) errores.push(`Máximo 4 mediocentros ofensivos (AM). Actualmente hay ${amCount}.`);
+            if (fwCount > 6) errores.push(`Máximo 6 delanteros (FW). Actualmente hay ${fwCount}.`);
+        }
         
         return errores;
     }
@@ -798,7 +840,6 @@
         updateConditionalsDeleteSelect();
     });
 
-    // Botón condicionales sugeridos
     suggestedConditionalsBtn.addEventListener('click', () => {
         if (rosterData.length === 0) {
             alert('Primero debes cargar una plantilla.');
@@ -809,12 +850,58 @@
             alert('Debes tener 11 titulares seleccionados antes de generar condicionales sugeridos.');
             return;
         }
-        generateSuggestedConditionals();
+        suggestedConditionals = [];
+        const newSubs = generateSuggestedSubs();
+        const currentTactic = prefixBtn.dataset.value || '';
+        const newConds = generateSuggestedConds(currentTactic);
+        suggestedConditionals.push(...newSubs, ...newConds);
+        
         lineupSaved = false;
         updateTranscription();
         updateCurrentConditionals();
         updateConditionalsDeleteSelect();
+        alert(`Se han añadido ${suggestedConditionals.length} condicionales sugeridos.`);
     });
+
+    function generateSuggestedSubs() {
+        const subs = [];
+        const dfPlayer = Math.random() < 0.5 ? 2 : 3;
+        const mfPlayer = Math.random() < 0.5 ? 7 : 8;
+        const fwPlayer = Math.random() < 0.5 ? 11 : 10;
+        const min1 = Math.floor(Math.random() * (90-45+1)) + 45;
+        const min2 = Math.floor(Math.random() * (90-45+1)) + 45;
+        const min3 = Math.floor(Math.random() * (90-45+1)) + 45;
+        const substitutionsList = [
+            { text: `SUB ${dfPlayer} 13 DF IF MIN = ${min1}`, min: min1 },
+            { text: `SUB ${mfPlayer} 15 MF IF MIN = ${min2}`, min: min2 },
+            { text: `SUB ${fwPlayer} 16 FW IF MIN = ${min3}`, min: min3 }
+        ];
+        substitutionsList.sort((a,b) => a.min - b.min);
+        return substitutionsList.map(sub => sub.text);
+    }
+
+    function generateSuggestedConds(currentTactic) {
+        const category1 = [
+            'TACTIC L IF SCORE = 3',
+            'TACTIC P IF SCORE = 2',
+            'TACTIC D IF SCORE = -3',
+            'TACTIC A IF MIN >= 65 SCORE <= -1',
+            'TACTIC C IF MIN >= 50 SCORE >= 1',
+            'TACTIC D IF MIN >= 70 SCORE >= 2'
+        ].filter(cond => !cond.includes(`TACTIC ${currentTactic}`));
+        const shuffledCat1 = category1.sort(() => 0.5 - Math.random());
+        const selectedCat1 = shuffledCat1.slice(0,2);
+        const category2 = [
+            'CHANGEPOS 9 AM IF MIN = 65 SCORE <= -1',
+            'CHANGEPOS 7 DM IF MIN >= 65 SCORE <= 1',
+            'CHANGEAGG 18 IF SCORE <= -2',
+            'CHANGEAGG 10 IF SCORE <= 2'
+        ];
+        const numCat2 = Math.floor(Math.random() * 3);
+        const shuffledCat2 = category2.sort(() => 0.5 - Math.random());
+        const selectedCat2 = shuffledCat2.slice(0, numCat2);
+        return [...selectedCat1, ...selectedCat2];
+    }
 
     rosterInput.addEventListener('input', () => {
         processRoster();
@@ -1803,19 +1890,16 @@
         averageAgeDisplay.textContent = `Edad media: ${averageAge}`;
     }
 
-    // Función para mover jugador seleccionado al campo (por clic)
+    // Funciones para mover jugador seleccionado (con corrección de zoom)
     function moveSelectedPlayerToField(x, y, section) {
         if (!selectedOnFieldPlayer) return;
         const player = selectedOnFieldPlayer;
         if (!player.classList.contains('on-field')) return;
         
-        // Obtener datos del jugador desde rosterData
         const playerName = player.querySelector('.name').textContent;
         const playerData = rosterData.find(p => formatDisplayName(p.name) === playerName);
         if (!playerData) return;
         
-        // Verificar que no haya un jugador ya en esa posición (mismo section? No importa, se puede solapar? Mejor permitir mover libremente)
-        // Simplemente actualizar coordenadas
         const oldSection = Array.from(player.classList).find(c => c.startsWith('section-'));
         const newSection = `section-${section}`;
         
@@ -1824,7 +1908,6 @@
         if (oldSection) player.classList.remove(oldSection);
         player.classList.add(newSection);
         
-        // Reordenar números y actualizar
         lineupSaved = false;
         updatePlayerNumbers();
         updateTranscription();
@@ -1832,12 +1915,10 @@
         updateFormation();
         updateAverageAge();
         updateButtonGlows();
-        // Remover selección
         player.classList.remove('selected-glow');
         selectedOnFieldPlayer = null;
     }
     
-    // Función para mover jugador seleccionado a un slot de suplente
     function moveSelectedPlayerToSubstitute(slotElement) {
         if (!selectedOnFieldPlayer) return;
         const player = selectedOnFieldPlayer;
@@ -1846,16 +1927,12 @@
         const targetSlot = slotElement.closest('.substitute-slot');
         if (!targetSlot) return;
         
-        // Si el slot ya tiene un jugador, intercambiar
         const existingPlayer = targetSlot.querySelector('.player-button');
         if (existingPlayer) {
-            // Intercambiar: el jugador del campo va al banquillo, el del banquillo va al campo
-            // Guardar datos del banquillo
             const subPlayer = existingPlayer;
             const subPlayerData = rosterData.find(p => formatDisplayName(p.name) === subPlayer.querySelector('.name').textContent);
             if (!subPlayerData) return;
             
-            // Mover el seleccionado al banquillo
             player.classList.remove('on-field');
             const oldSection = Array.from(player.classList).find(c => c.startsWith('section-'));
             if (oldSection) player.classList.remove(oldSection);
@@ -1863,33 +1940,23 @@
             player.style.position = 'absolute';
             player.style.left = '0px';
             player.style.top = '0px';
-            // Actualizar número del suplente
             const slotNumber = parseInt(targetSlot.dataset.number);
             player.querySelector('.number').textContent = slotNumber;
             player.querySelector('.name').textContent = formatDisplayName(playerData.name);
-            // Reconstruir tooltip
             const tooltipDiv = player.querySelector('.player-tooltip');
             if (tooltipDiv) {
                 tooltipDiv.innerHTML = `${playerData.position} ${playerData.fit}%<br>GK: ${playerData.st} DF: ${playerData.tk}<br>MF: ${playerData.ps} FW: ${playerData.sh}`;
             }
             targetSlot.appendChild(player);
             
-            // Mover el suplente al campo en la misma posición (coordenadas) que tenía el seleccionado
             subPlayer.classList.remove('on-substitute');
             subPlayer.classList.add('on-field');
-            const oldSubLeft = subPlayer.style.left;
-            const oldSubTop = subPlayer.style.top;
-            // Restaurar coordenadas del campo desde el seleccionado
             subPlayer.style.left = player._oldLeft || '0px';
             subPlayer.style.top = player._oldTop || '0px';
-            // Restaurar sección
             const subOldSection = player._oldSection;
             if (subOldSection) subPlayer.classList.add(subOldSection);
-            // Añadir remove-btn de nuevo (ya que al ser movido al campo necesita botón de eliminar)
-            // Pero ya lo tiene, solo actualizar número? El número se actualizará en updatePlayerNumbers
             fieldContainer.appendChild(subPlayer);
             
-            // Guardar cambios
             lineupSaved = false;
             updatePlayerNumbers();
             updateTranscription();
@@ -1897,22 +1964,18 @@
             updateFormation();
             updateAverageAge();
             updateButtonGlows();
-            filterPlayers(); // actualizar lista de jugadores disponibles
-            // Remover selección
+            filterPlayers();
             player.classList.remove('selected-glow');
             selectedOnFieldPlayer = null;
             return;
         }
         
-        // Si el slot está vacío
         const slotNumber = parseInt(targetSlot.dataset.number);
-        // Guardar posición antigua del jugador por si se necesita
         player._oldLeft = player.style.left;
         player._oldTop = player.style.top;
         const oldSection = Array.from(player.classList).find(c => c.startsWith('section-'));
         player._oldSection = oldSection;
         
-        // Mover al banquillo
         player.classList.remove('on-field');
         if (oldSection) player.classList.remove(oldSection);
         player.classList.add('on-substitute');
@@ -1934,27 +1997,23 @@
         selectedOnFieldPlayer = null;
     }
 
-    // Listener de clic en el campo para mover jugador seleccionado
+    // Listener de clic en el campo (con corrección de zoom)
     fieldContainer.addEventListener('click', (e) => {
-        // Si hay un jugador seleccionado
         if (selectedOnFieldPlayer) {
-            // Si se hizo clic en otro jugador, el intercambio ya lo maneja el otro listener (el de swapping)
-            // Si se hizo clic en un substitute-slot
             const substituteSlot = e.target.closest('.substitute-slot');
             if (substituteSlot) {
                 e.stopPropagation();
                 moveSelectedPlayerToSubstitute(substituteSlot);
                 return;
             }
-            // Si se hizo clic en una imagen de campo o en el fondo
             const target = e.target;
             if (target.classList.contains('field-section') || target === fieldContainer || target.parentElement === fieldContainer) {
-                // Obtener coordenadas relativas al fieldContainer
                 const rect = fieldContainer.getBoundingClientRect();
-                const xDrop = e.clientX - rect.left - 15;
-                const yDrop = e.clientY - rect.top;
+                const scale = isFieldZoomed ? 0.8 : 1;
+                // Convertir coordenadas del mouse a espacio original (sin escala)
+                const xDrop = (e.clientX - rect.left) / scale - 15;
+                const yDrop = (e.clientY - rect.top) / scale;
                 
-                // Determinar sección según la altura
                 const sections = fieldContainer.querySelectorAll('.field-section');
                 const sectionHeights = Array.from(sections).map(section => section.offsetHeight);
                 const sectionOffsets = sectionHeights.map((_, i) => sectionHeights.slice(0, i).reduce((a, b) => a + b, 0));
@@ -1964,17 +2023,13 @@
                         section = 6 - i;
                     }
                 }
-                // Si es portero y se intenta mover a otra sección, se puede permitir (pero mantiene su posición GK)
                 moveSelectedPlayerToField(xDrop, yDrop, section);
                 return;
             }
         }
-        
-        // Comportamiento original: seleccionar/deseleccionar jugador (ya manejado por el evento de clic en player-button)
-        // pero si el clic no fue en un jugador, no hacer nada.
     });
 
-    // Inicialización de listeners de arrastre (drag & drop) y clic para intercambio (original)
+    // Drag & drop (con corrección de zoom)
     function initFieldInteractions() {
         fieldContainer.addEventListener('dragover', (e) => e.preventDefault());
 
@@ -1991,8 +2046,9 @@
             if (!button.classList.contains('on-field') && playersOnField.length >= 11) return;
 
             const rect = fieldContainer.getBoundingClientRect();
-            const xDrop = e.clientX - rect.left - 15;
-            const yDrop = e.clientY - rect.top;
+            const scale = isFieldZoomed ? 0.8 : 1;
+            const xDrop = (e.clientX - rect.left) / scale - 15;
+            const yDrop = (e.clientY - rect.top) / scale;
 
             const sections = fieldContainer.querySelectorAll('.field-section');
             const sectionHeights = Array.from(sections).map(section => section.offsetHeight);
@@ -2029,25 +2085,26 @@
             const y = sectionTop + (sectionHeight / 2) - 15;
 
             if (section === 1) {
-                x = fieldContainer.offsetWidth / 2 - 15;
+                const containerWidth = fieldContainer.offsetWidth;
+                x = containerWidth / 2 - 15;
             }
 
             let overlappingPlayer = null;
             if (button.classList.contains('on-field')) {
                 const allPlayersOnField = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
+                const dropRectAbs = {
+                    left: e.clientX - 15,
+                    right: e.clientX + 15,
+                    top: e.clientY - 15,
+                    bottom: e.clientY + 15
+                };
                 allPlayersOnField.forEach(player => {
                     if (player !== button) {
                         const playerRect = player.getBoundingClientRect();
-                        const dropRect = {
-                            left: e.clientX - 15,
-                            right: e.clientX + 15,
-                            top: e.clientY - 15,
-                            bottom: e.clientY + 15
-                        };
-                        if (dropRect.left < playerRect.right &&
-                            dropRect.right > playerRect.left &&
-                            dropRect.top < playerRect.bottom &&
-                            dropRect.bottom > playerRect.top) {
+                        if (dropRectAbs.left < playerRect.right &&
+                            dropRectAbs.right > playerRect.left &&
+                            dropRectAbs.top < playerRect.bottom &&
+                            dropRectAbs.bottom > playerRect.top) {
                             overlappingPlayer = player;
                         }
                     }
@@ -2277,114 +2334,6 @@
     }
 
     initFieldInteractions();
-
-    // Funciones para condicionales sugeridos (basadas en página de referencia)
-    function generateSuggestedConditionals() {
-        // Limpiar sugerencias anteriores
-        suggestedConditionals = [];
-        // Obtener táctica actual
-        const currentTactic = prefixBtn.dataset.value || '';
-        // Generar sustituciones sugeridas
-        const suggestedSubs = generateSuggestedSubs();
-        // Generar condicionales sugeridos (táctica/agresividad/reposición)
-        const suggestedConds = generateSuggestedConds(currentTactic);
-        suggestedConditionals.push(...suggestedSubs, ...suggestedConds);
-        // Mostrar mensaje
-        if (suggestedConditionals.length === 0) {
-            alert('No se pudieron generar condicionales sugeridos. Asegúrate de tener 11 titulares.');
-        } else {
-            alert(`Se han añadido ${suggestedConditionals.length} condicionales sugeridos.`);
-        }
-    }
-
-    function generateSuggestedSubs() {
-        // Obtener lista de titulares con sus números
-        const starters = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
-        if (starters.length !== 11) return [];
-        
-        // Mapear números
-        const playerNumbers = {};
-        let currentNumber = 1;
-        for (let i = 1; i <= 6; i++) {
-            const sectionPlayers = starters.filter(p => p.classList.contains(`section-${i}`))
-                .sort((a, b) => parseFloat(a.style.left) - parseFloat(b.style.left));
-            sectionPlayers.forEach(player => {
-                playerNumbers[player.querySelector('.name').textContent] = currentNumber++;
-            });
-        }
-        
-        // Obtener suplentes con números
-        const substitutes = Array.from(substitutesContainer.querySelectorAll('.player-button.on-substitute'));
-        const subNumbers = {};
-        substitutes.forEach((player, idx) => {
-            const name = player.querySelector('.name').textContent;
-            subNumbers[name] = 12 + idx;
-        });
-        
-        // Generar hasta 3 sustituciones aleatorias (solo si hay suplentes)
-        if (substitutes.length === 0) return [];
-        
-        const subsList = [];
-        const usedOut = new Set();
-        const usedIn = new Set();
-        // Posiciones posibles para retirar (2,3,7,8,10,11 según referencia)
-        const possibleOutNumbers = [2,3,7,8,10,11].filter(n => {
-            const player = starters.find(p => parseInt(p.querySelector('.number').textContent) === n);
-            return player && !usedOut.has(n);
-        });
-        // Seleccionar aleatoriamente hasta 3
-        const numSubs = Math.min(3, possibleOutNumbers.length, substitutes.length);
-        for (let i = 0; i < numSubs; i++) {
-            if (possibleOutNumbers.length === 0) break;
-            const randomIndex = Math.floor(Math.random() * possibleOutNumbers.length);
-            const outNum = possibleOutNumbers[randomIndex];
-            possibleOutNumbers.splice(randomIndex, 1);
-            usedOut.add(outNum);
-            
-            // Elegir suplente disponible
-            const availableSubs = substitutes.filter(s => !usedIn.has(s.querySelector('.name').textContent));
-            if (availableSubs.length === 0) break;
-            const randomSub = availableSubs[Math.floor(Math.random() * availableSubs.length)];
-            const subName = randomSub.querySelector('.name').textContent;
-            const inNum = subNumbers[subName];
-            usedIn.add(subName);
-            
-            // Posición del suplente (la que tenga en la lista de suplentes)
-            const subPos = randomSub.getAttribute('data-position') || 'MF';
-            // Minuto aleatorio entre 45 y 90
-            const min = Math.floor(Math.random() * (90 - 45 + 1)) + 45;
-            subsList.push(`SUB ${outNum} ${inNum} ${subPos} IF MIN = ${min}`);
-        }
-        return subsList;
-    }
-
-    function generateSuggestedConds(currentTactic) {
-        const conds = [];
-        // Categoría 1: cambios de táctica según resultado
-        const tacticOptions = ['A','C','D','E','L','N','P','T'].filter(t => t !== currentTactic);
-        if (tacticOptions.length > 0) {
-            const randomTactic = tacticOptions[Math.floor(Math.random() * tacticOptions.length)];
-            conds.push(`TACTIC ${randomTactic} IF SCORE = 3`);
-            conds.push(`TACTIC D IF SCORE = -3`);
-        }
-        // Categoría 2: cambios de agresividad o reposiciones
-        const aggChange = Math.floor(Math.random() * 19) + 1; // 1-19
-        conds.push(`CHANGEAGG ${aggChange} IF SCORE <= -2`);
-        // Reposicionar algún centrocampista a delantero si va perdiendo
-        const starters = Array.from(fieldContainer.querySelectorAll('.player-button.on-field'));
-        const mfPlayers = starters.filter(p => {
-            const pos = p.getAttribute('data-position');
-            return pos === 'MF' || pos === 'DM' || pos === 'AM';
-        });
-        if (mfPlayers.length > 0) {
-            const randomMF = mfPlayers[Math.floor(Math.random() * mfPlayers.length)];
-            const mfNumber = parseInt(randomMF.querySelector('.number').textContent);
-            if (mfNumber >= 2 && mfNumber <= 11) {
-                conds.push(`CHANGEPOS ${mfNumber} FW IF MIN >= 65 SCORE <= -1`);
-            }
-        }
-        return conds;
-    }
 
     function openConditionalsPopup() {
         conditionalsPopup.style.display = 'block';
@@ -2953,7 +2902,7 @@
     }
 
     // Inicialización final
-    progressFill.style.width = '0%'; // Aseguramos que la barra empiece vacía
+    progressFill.style.width = '0%';
     processRoster();
 
     const tabContainer = document.getElementById('tab-container');
@@ -2963,7 +2912,6 @@
         tabContainer.classList.toggle('expanded');
     });
     
-    // Sonido de clic
     const clickSound = new Audio('https://www.tusoccermanager.com/download?id=850');
     document.addEventListener('click', (e) => {
         if (e.target.closest('button, [role="button"]')) {
@@ -2971,7 +2919,6 @@
         }
     });
 
-    // Advertencia al cerrar la ventana
     window.addEventListener('beforeunload', (e) => {
         const playersOnField = fieldContainer.querySelectorAll('.player-button.on-field').length;
         const substitutes = fieldContainer.querySelectorAll('.player-button.on-substitute').length;
